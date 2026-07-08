@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FOHOWAY Việt Nam — Dưỡng sinh · Sức khỏe · Sự nghiệp</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#0F6B4F;--gd:#0A4A37;--gs:#E6F5EE;--gold:#C9952C;--gos:#FBF5E6;--seal:#D4453A;--bg:#F7F8F6;--paper:#FFFFFF;--ink:#1B2B22;--mut:#6B7F72;--line:#E2E8E4;--r:14px;--sh:0 8px 28px rgba(0,107,63,.08)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Assistant',-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65}
+h1,h2,h3,.dsp{font-family:'Cormorant Garamond',serif}img{max-width:100%}.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:7px;border:none;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 22px;border-radius:999px;transition:.25s}.btn.sm{padding:8px 16px;font-size:12.5px}
+.btn-g{background:var(--g);color:#fff}.btn-g:hover{background:var(--gd)}.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{filter:brightness(.92)}.btn-seal{background:var(--seal);color:#fff}
+.btn-line{background:none;color:var(--g);border:1.5px solid var(--g)}.btn-line:hover{background:var(--g);color:#fff}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3.5px 10px;border-radius:999px}.tag.g{background:var(--gs);color:var(--g)}.tag.y{background:var(--gos);color:#8a6a1c}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--seal);font-weight:600}.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--seal)}
+/* NAV */
+.topbar{background:var(--gd);color:#9cc5aa;font-size:11.5px;padding:6px 0}.topbar .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}.topbar a{color:var(--gold);text-decoration:none}
+nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}.logo .mk{width:40px;height:40px;border-radius:50%;background:var(--g);color:var(--gold);display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px;border:2px solid var(--gold);flex:none}
+.logo b{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gd);letter-spacing:.04em}.logo small{display:block;font-size:9.5px;letter-spacing:.28em;color:var(--gold);font-weight:600}
+.navlinks{display:flex;gap:3px;margin-left:auto;flex-wrap:wrap}
+.navlinks button{background:none;border:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer;transition:.2s}
+.navlinks button:hover{background:var(--gs)}.navlinks button.on{background:var(--g);color:#fff}
+/* HERO */
+.hero{background:linear-gradient(155deg,var(--gd) 0%,var(--g) 65%,#0d8a52 100%);color:#fff;padding:80px 0 90px;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;position:relative;z-index:2}
+.hero h1{font-size:clamp(32px,4.4vw,52px);line-height:1.12;margin:14px 0 18px}.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .lead{color:#cfe0d6;font-size:16px;max-width:500px;font-weight:300}
+.hero .eyebrow{color:var(--gold)}.hero .eyebrow::before{background:var(--gold)}
+.hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:32px;margin-top:40px;flex-wrap:wrap}.hero-stats b{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);display:block}.hero-stats span{font-size:11px;color:#b3cfbe;letter-spacing:.06em}
+.seal-scene{position:relative;width:320px;height:320px;margin:0 auto}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(212,168,67,.5);animation:spin 60s linear infinite}.ring.r2{inset:26px;border-style:solid;border-color:rgba(255,255,255,.15);animation-duration:90s;animation-direction:reverse}.ring.r3{inset:52px;border:1px dashed rgba(255,255,255,.25);animation-duration:45s}
+.ring i{position:absolute;top:-4px;left:50%;width:8px;height:8px;background:var(--gold);border-radius:50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seal-c{position:absolute;inset:86px;border-radius:24px;background:var(--seal);box-shadow:0 16px 36px rgba(0,0,0,.3),inset 0 0 0 4px rgba(255,255,255,.18);display:grid;place-items:center;transform:rotate(-6deg)}
+.seal-c span{font-family:'Cormorant Garamond',serif;color:#fff;font-size:42px;font-weight:700;line-height:1.05;text-align:center}.seal-c small{color:#fbd9cf;font-size:10px;letter-spacing:.3em;margin-top:5px;display:block;font-family:'Assistant',sans-serif}
+/* SECTIONS */
+.page{display:none}.page.on{display:block;animation:fd .35s}@keyframes fd{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+section{padding:64px 0}.sec-h{max-width:600px;margin-bottom:36px}.sec-h h2{font-size:32px;color:var(--gd);margin:8px 0 10px;line-height:1.2}.sec-h p{color:var(--mut)}
+/* 3 pillars */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tri .c{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:28px 22px;transition:.25s;position:relative}.tri .c:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.tri .zi{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--gold);line-height:1}.tri h3{color:var(--gd);margin:10px 0 6px;font-size:18px}.tri p{font-size:13px;color:var(--mut)}
+/* Product grid */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.pc{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.25s;cursor:pointer}.pc:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.pthumb{height:160px;display:grid;place-items:center;font-size:50px;background:linear-gradient(150deg,var(--gs),#f0f5e8)}
+.pbody{padding:14px 16px}.pbody h3{font-size:14px;color:var(--gd);line-height:1.3;font-family:'Assistant',sans-serif;font-weight:600;margin-bottom:6px}
+.price{font-weight:700;color:var(--seal);font-size:15px}.price s{color:#b3bfb3;font-weight:400;font-size:12px;margin-left:6px}
+.rate{font-size:11.5px;color:var(--gold);margin-bottom:4px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.filters button{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 16px;font-family:inherit;font-size:12.5px;cursor:pointer;transition:.15s}.filters button.on,.filters button:hover{background:var(--g);color:#fff;border-color:var(--g)}
+/* Library */
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.lc{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;gap:14px;align-items:flex-start;transition:.2s}.lc:hover{box-shadow:var(--sh)}
+.lic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:20px;flex:none}.lic.d{background:var(--gs)}.lic.v{background:#fde8e5}.lic.a{background:var(--gos)}
+.lc h4{font-size:13.5px;color:var(--gd);margin-bottom:3px}.lc small{color:var(--mut);font-size:11.5px}
+/* Partners */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:28px}
+.panel h3{color:var(--gd);font-size:20px;margin:8px 0 10px}
+.check{list-style:none;font-size:13px}.check li{padding:5px 0 5px 24px;position:relative}.check li::before{content:"✓";position:absolute;left:0;color:var(--seal);font-weight:700}
+/* Leaders */
+.leader-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.leader{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:22px;text-align:center;transition:.2s}.leader:hover{box-shadow:var(--sh)}
+.leader .av{width:72px;height:72px;border-radius:50%;background:linear-gradient(140deg,var(--g),var(--gd));color:var(--gold);display:grid;place-items:center;margin:0 auto 12px;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;border:2.5px solid var(--gold)}
+.leader b{color:var(--gd);font-size:14px}.leader small{display:block;color:var(--mut);font-size:11.5px;margin-top:3px}
+/* Timeline */
+.timeline{position:relative;padding-left:28px;max-width:680px}.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--gold),var(--g))}
+.tl{position:relative;padding-bottom:24px}.tl::before{content:"";position:absolute;left:-25px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--seal);border:3px solid var(--bg)}
+.tl b{font-family:'Cormorant Garamond',serif;color:var(--seal);font-size:16px}
+/* Values */
+.values{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.vc{background:var(--g);color:#fff;border-radius:var(--r);padding:24px 20px;text-align:center;transition:.25s}.vc:hover{background:var(--gd);transform:translateY(-3px)}
+.vc .zi{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--gold)}.vc b{display:block;margin:6px 0 4px;font-size:15px}.vc p{font-size:12px;color:#cfe0d6}
+/* Overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,77,44,.5);z-index:90;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 16px;backdrop-filter:blur(3px)}.overlay.on{display:flex}
+.modal{background:var(--paper);border-radius:18px;max-width:900px;width:100%;box-shadow:0 28px 70px rgba(0,0,0,.3);position:relative;animation:fd .3s}.modal.sm{max-width:420px}
+.modal .x{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:none;background:var(--bg);cursor:pointer;font-size:14px;z-index:5}
+.pd{display:grid;grid-template-columns:.9fr 1.1fr}.pd-img{background:linear-gradient(150deg,var(--gs),#f0f5e8);display:grid;place-items:center;font-size:100px;border-radius:18px 0 0 18px;min-height:350px}
+.pd-info{padding:28px 26px}.pd-info h2{font-size:22px;color:var(--gd);margin:6px 0;line-height:1.25}
+.ptabs{display:flex;gap:2px;border-bottom:2px solid var(--line);margin:14px 0 10px;flex-wrap:wrap}
+.ptabs button{background:none;border:none;font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 12px;cursor:pointer;color:var(--mut);border-bottom:2.5px solid transparent;margin-bottom:-2px}.ptabs button.on{color:var(--seal);border-color:var(--seal)}
+.ptab-body{font-size:13px;color:#3d4a3d;min-height:80px}.ptab-body ul{padding-left:16px}
+.note{background:var(--gos);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;font-size:13px;margin-top:18px}
+.field{margin-bottom:12px}.field label{display:block;font-size:11.5px;font-weight:600;margin-bottom:5px;color:var(--gd)}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;background:#fff}.field input:focus{outline:2px solid var(--g);border-color:var(--g)}
+/* AI Chatbot bubble */
+.ai-bubble{position:fixed;bottom:24px;right:24px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.ai-toggle{width:56px;height:56px;border-radius:50%;background:var(--g);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(0,107,63,.3);transition:.2s}.ai-toggle:hover{transform:scale(1.08);background:var(--gd)}
+.ai-window{width:360px;background:var(--paper);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.2);display:none;overflow:hidden}
+.ai-window.on{display:block;animation:fd .25s}
+.ai-head{background:var(--g);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.ai-head button{background:none;border:none;color:#fff;font-size:16px;cursor:pointer}
+.ai-body{height:280px;overflow-y:auto;padding:14px;font-size:13px}
+.ai-msg{margin-bottom:10px;max-width:85%}.ai-msg.bot{background:var(--gs);padding:10px 14px;border-radius:12px 12px 12px 2px;color:var(--ink)}.ai-msg.user{background:var(--g);color:#fff;padding:10px 14px;border-radius:12px 12px 2px 12px;margin-left:auto}
+.ai-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}.ai-input input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:13px}.ai-input button{background:var(--g);color:#fff;border:none;border-radius:10px;padding:9px 14px;cursor:pointer;font-family:inherit;font-weight:600;font-size:13px}
+/* CTV Registration modal */
+.reg-inner{padding:32px 28px}.reg-inner h2{color:var(--gd);margin-bottom:4px}.reg-inner p{color:var(--mut);font-size:13px;margin-bottom:18px}
+.reg-steps{display:flex;gap:8px;margin-bottom:20px}.reg-steps span{flex:1;height:4px;border-radius:99px;background:var(--line)}.reg-steps span.on{background:var(--seal)}
+/* Footer */
+footer{background:var(--gd);color:#9cc5aa;padding:50px 0 26px;margin-top:30px}footer .cols{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:28px;font-size:13px}
+footer h4{color:var(--gold);font-size:12px;letter-spacing:.14em;margin-bottom:12px;text-transform:uppercase;font-family:'Assistant',sans-serif}
+footer a{color:#9cc5aa;text-decoration:none;display:block;padding:3px 0}footer a:hover{color:#fff}
+.copyright{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:18px;font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gd);color:#fff;padding:12px 22px;border-radius:11px;font-size:13px;z-index:120;transition:.35s;box-shadow:0 10px 28px rgba(0,0,0,.3);opacity:0}.toast.on{transform:translateX(-50%);opacity:1}
+@media(max-width:1024px){.hero .wrap,.duo,.pd{grid-template-columns:1fr}.pgrid,.leader-grid{grid-template-columns:repeat(2,1fr)}.tri,.lgrid,.values{grid-template-columns:1fr 1fr}footer .cols{grid-template-columns:1fr 1fr}.seal-scene{display:none}.pd-img{border-radius:18px 18px 0 0;min-height:200px;font-size:70px}}
+@media(max-width:768px){body{font-size:14px}.hero h1{font-size:28px!important}.hero .wrap{grid-template-columns:1fr}.seal-scene{display:none}.pgrid{grid-template-columns:repeat(2,1fr)}.tri,.lgrid{grid-template-columns:1fr}.values{grid-template-columns:1fr 1fr}.leader-grid{grid-template-columns:repeat(2,1fr)}footer .cols{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.pgrid,.leader-grid,.values{grid-template-columns:1fr}.navlinks{display:none}footer .cols{grid-template-columns:1fr}.hero-stats{gap:16px}.hero-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span>☎ Hotline: <a href="#">0919 715 868</a> · ✉ hotro@fohoway.vn</span><span>🌐 Tiếng Việt ▾ · <a href="#">Facebook</a> · <a href="#">YouTube</a> · <a href="#">TikTok</a></span></div></div>
+<nav><div class="wrap">
+  <div class="logo" onclick="go('home')"><div class="mk">和</div><div><b>FOHOWAY</b><small>VIỆT NAM · DƯỠNG SINH</small></div></div>
+  <div class="navlinks">
+    <button class="on" data-p="home" onclick="go('home')">Trang chủ</button>
+    <button data-p="congty" onclick="go('congty')">Tập đoàn</button>
+    <button data-p="sanpham" onclick="go('sanpham')">Sản phẩm</button>
+    <button data-p="thuvien" onclick="go('thuvien')">Thư viện</button>
+    <button data-p="doitac" onclick="go('doitac')">Đối tác</button>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn btn-gold sm" onclick="openReg()">Đăng ký CTV</button>
+    <button class="btn btn-line sm" onclick="toast('Mở modal Đăng nhập (OTP Zalo/SMS)')">Đăng nhập</button>
+  </div>
+</div></nav>
+
+<!-- HOME -->
+<div class="page on" id="pg-home">
+<div class="hero"><div class="wrap">
+  <div>
+    <span class="eyebrow">Since 2007 · Moscow → 30+ quốc gia</span>
+    <h1>Phát huy văn hóa <em>dưỡng sinh</em>,<br>phục vụ sức khỏe nhân loại</h1>
+    <p class="lead">FOHOWAY kết hợp 5.000 năm tinh hoa Trung y với dinh dưỡng học phương Tây — mang đến hệ sản phẩm & nền tảng sự nghiệp sức khỏe toàn cầu.</p>
+    <div class="hero-actions"><button class="btn btn-gold" onclick="go('sanpham')">Khám phá sản phẩm →</button><button class="btn btn-line" style="border-color:#fff;color:#fff" onclick="openReg()">Trở thành CTV kinh doanh</button></div>
+    <div class="hero-stats"><div><b>19+</b><span>NĂM PHÁT TRIỂN</span></div><div><b>30+</b><span>QUỐC GIA</span></div><div><b>120+</b><span>SẢN PHẨM</span></div><div><b>3</b><span>HỌC THUYẾT</span></div></div>
+  </div>
+  <div class="seal-scene" aria-hidden="true"><div class="ring"><i></i></div><div class="ring r2"></div><div class="ring r3"><i></i></div><div class="seal-c"><div><span>和<br>FHW</span><small>HÒA · TRỊ · HỮU · ĐỨC</small></div></div></div>
+</div></div>
+<section><div class="wrap"><div class="sec-h"><span class="eyebrow">Nền tảng triết lý</span><h2>Ba học thuyết dưỡng sinh</h2></div>
+  <div class="tri">
+    <div class="c"><div class="zi">食</div><h3>Dinh dưỡng dưỡng sinh</h3><p>Đông trùng hạ thảo, linh chi, nhân sâm — thảo dược quý theo nguyên lý quân–thần–tá–sứ.</p></div>
+    <div class="c"><div class="zi">行</div><h3>Hành vi dưỡng sinh</h3><p>Thiết bị chăm sóc sức khỏe: kinh lạc, xung điện, hồng ngoại — spa tại nhà.</p></div>
+    <div class="c"><div class="zi">心</div><h3>Tâm lý dưỡng sinh</h3><p>Cân bằng thân–tâm–trí, cộng đồng tích cực, văn hóa Hòa–Trị–Hữu–Đức.</p></div>
+  </div>
+</div></section>
+<section style="padding-top:0"><div class="wrap"><div class="sec-h"><span class="eyebrow">Nổi bật</span><h2>Sản phẩm tiêu biểu</h2></div><div class="pgrid" id="home-grid"></div><div style="text-align:center;margin-top:28px"><button class="btn btn-g" onclick="go('sanpham')">Xem tất cả sản phẩm</button></div></div></section>
+<section style="background:var(--g);color:#fff"><div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+  <div><span class="eyebrow" style="color:var(--gold)">Cơ hội sự nghiệp</span><h2 style="font-size:30px;margin:10px 0 12px">Cửa hàng online của riêng bạn — trong 5 phút</h2><p style="color:#cfe0d6;font-size:14px">Đăng ký CTV, tạo cửa hàng riêng, tùy biến giao diện, bật thanh toán & vận chuyển, tạo landing page cho từng sản phẩm.</p><div style="margin-top:22px"><button class="btn btn-gold" onclick="openReg()">Đăng ký CTV miễn phí →</button></div></div>
+  <div style="background:rgba(255,255,255,.07);border:1px dashed var(--gold);border-radius:16px;padding:24px;text-align:center"><div style="font-size:42px">🏪</div><b style="font-family:'Cormorant Garamond',serif;font-size:18px">Shop Dưỡng Sinh Minh Anh</b><div style="font-family:monospace;font-size:12px;background:rgba(0,0,0,.25);padding:6px 12px;border-radius:8px;display:inline-block;margin-top:8px;color:#9fe0c5">fohoway.vn/s/minh-anh</div><p style="font-size:12px;color:#cfe0d6;margin-top:8px">Mỗi CTV có cửa hàng riêng · Tự quản lý · SEO · Landing Page · API thanh toán</p></div>
+</div></section>
+</div>
+
+<!-- TẬP ĐOÀN -->
+<div class="page" id="pg-congty"><section><div class="wrap">
+  <div class="sec-h"><span class="eyebrow">Hồ sơ tập đoàn</span><h2>Về FOHOWAY Group</h2><p>Thành lập 02/2007 tại Moscow, thuộc hệ sinh thái FOHERB/WHIEDA (Chủ tịch Han Jinming). Thành viên Tăng trưởng Toàn cầu — Diễn đàn Kinh tế Thế giới.</p></div>
+  <div class="duo">
+    <div><h3 style="color:var(--gd);font-size:19px;margin-bottom:14px">Dấu mốc lịch sử</h3><div class="timeline"><div class="tl"><b>2007</b><p>Thành lập tại Moscow, khởi đầu sứ mệnh dưỡng sinh.</p></div><div class="tl"><b>2012</b><p>Viện R&D & nhà máy GMP Thiên Tân.</p></div><div class="tl"><b>2018</b><p>30+ quốc gia; gia nhập WEF.</p></div><div class="tl"><b>2024</b><p>Ra mắt thị trường Việt Nam.</p></div><div class="tl"><b>2026</b><p>Nền tảng số hóa toàn diện.</p></div></div></div>
+    <div><h3 style="color:var(--gd);font-size:19px;margin-bottom:14px">Giá trị cốt lõi</h3><div class="values" style="grid-template-columns:1fr 1fr"><div class="vc"><div class="zi">和</div><b>Hòa</b><p>Hòa hợp thiên nhiên, xã hội.</p></div><div class="vc"><div class="zi">治</div><b>Trị</b><p>Quản trị minh bạch.</p></div><div class="vc"><div class="zi">友</div><b>Hữu</b><p>Doanh nghiệp — gia đình lớn.</p></div><div class="vc"><div class="zi">德</div><b>Đức</b><p>Kinh doanh trung thực.</p></div></div></div>
+  </div>
+</div></section>
+<section style="padding-top:0"><div class="wrap"><div class="sec-h"><span class="eyebrow">Lãnh đạo</span><h2>Ban lãnh đạo</h2></div>
+  <div class="leader-grid"><div class="leader"><div class="av">韩</div><b>Han Jinming</b><small>Chủ tịch WHIEDA/FOHERB/FOHOWAY</small></div><div class="leader"><div class="av">K</div><b>Kevin Hou</b><small>Phó CT · GĐ Thị trường Quốc tế</small></div><div class="leader"><div class="av">Y</div><b>Lê Hải Yến</b><small>Trưởng Ban PTTTVN</small></div><div class="leader"><div class="av">B</div><b>Nguyễn Bích</b><small>Trưởng Ban ĐH VN</small></div></div>
+</div></section></div>
+
+<!-- SẢN PHẨM -->
+<div class="page" id="pg-sanpham"><section><div class="wrap">
+  <div class="sec-h"><span class="eyebrow">Kho sản phẩm</span><h2>Sản phẩm FOHOWAY</h2><p>Nhấp vào sản phẩm xem chi tiết. Nút <b style="color:var(--seal)">Nơi bán</b> dẫn đến cửa hàng CTV gần bạn.</p></div>
+  <div class="filters" id="filters"></div>
+  <div class="pgrid" id="all-grid"></div>
+</div></section></div>
+
+<!-- THƯ VIỆN -->
+<div class="page" id="pg-thuvien"><section><div class="wrap">
+  <div class="sec-h"><span class="eyebrow">Tri thức</span><h2>Thư viện tài liệu & truyền thông</h2></div>
+  <div class="filters"><button class="on" onclick="libTab(this,'doc')">📄 Tài liệu</button><button onclick="libTab(this,'vid')">🎬 Video</button><button onclick="libTab(this,'aud')">🎧 Audio / Podcast</button></div>
+  <div class="lgrid" id="lib-grid"></div>
+  <div class="note">🎙 Lộ trình: Podcast "Dưỡng Sinh Mỗi Ngày" (Spotify/Apple), đồng bộ YouTube & TikTok qua API.</div>
+</div></section></div>
+
+<!-- ĐỐI TÁC -->
+<div class="page" id="pg-doitac"><section><div class="wrap">
+  <div class="sec-h"><span class="eyebrow">Mạng lưới</span><h2>Đối tác phát triển</h2></div>
+  <div class="duo">
+    <div class="panel"><span class="tag g">KÊNH 1</span><h3>🏥 Spa & Trung tâm CSSK</h3><p style="font-size:13px;color:var(--mut)">Cơ sở vật lý ứng dụng thiết bị FOHOWAY.</p><div style="margin-top:14px"><button class="btn btn-g sm" onclick="toast('🗺 Mở bản đồ spa')">Xem bản đồ</button> <button class="btn btn-line sm" onclick="toast('📋 Form đăng ký Spa đối tác')">Đăng ký Spa</button></div></div>
+    <div class="panel" style="border-color:var(--gold)"><span class="tag y">KÊNH 2</span><h3>🤝 Cộng tác viên Kinh doanh</h3><p style="font-size:13px;color:var(--mut)">Mỗi CTV có cửa hàng online riêng trên nền tảng FOHOWAY.</p>
+      <ul class="check" style="margin-top:10px"><li>Đăng ký + KYC (CCCD, SĐT)</li><li>Cửa hàng riêng <b>fohoway.vn/s/tên-bạn</b></li><li>Tự setup giao diện, SEO, quảng cáo</li><li>Tạo landing page từng sản phẩm</li><li>Kết nối API thanh toán & vận chuyển</li><li>CRM khách hàng & báo cáo kinh doanh</li></ul>
+      <div style="margin-top:14px"><button class="btn btn-seal" onclick="openReg()">Đăng ký CTV ngay →</button></div>
+    </div>
+  </div>
+</div></section></div>
+
+<footer><div class="wrap">
+  <div class="cols"><div><div class="logo" style="margin-bottom:12px"><div class="mk">和</div><div><b style="color:#fff">FOHOWAY</b><small>VIỆT NAM</small></div></div><p>Số 5 ngõ 100 Dịch Vọng Hậu, Cầu Giấy, HN<br>☎ 0919 715 868 · ✉ hotro@fohoway.vn</p></div>
+  <div><h4>Tập đoàn</h4><a href="#">Hồ sơ</a><a href="#">Sứ mệnh</a><a href="#">Viện R&D</a><a href="#">Thông điệp CT</a></div>
+  <div><h4>Hỗ trợ</h4><a href="#">Chính sách</a><a href="#">Vận chuyển</a><a href="#">Hướng dẫn CTV</a><a href="#">FAQ</a></div>
+  <div><h4>Kết nối</h4><a href="#">Facebook</a><a href="#">YouTube</a><a href="#">TikTok</a><a href="#">Podcast</a></div></div>
+  <div class="copyright"><span>© 2026 FOHOWAY Việt Nam</span><span>Điều khoản · Bảo mật · TMĐT</span></div>
+</div></footer>
+
+<!-- PRODUCT MODAL -->
+<div class="overlay" id="ov-pd" onclick="if(event.target===this)closeOv('ov-pd')"><div class="modal"><button class="x" onclick="closeOv('ov-pd')">✕</button>
+<div class="pd"><div class="pd-img" id="me">🍄</div><div class="pd-info"><span class="tag g" id="mc">—</span><h2 id="mn">—</h2><div class="rate">★★★★★ <span style="color:var(--mut)">4.9 · 132 đánh giá</span></div><div class="price" style="font-size:20px;margin-top:6px"><span id="mp"></span> <s id="mo"></s></div>
+<div class="ptabs"><button class="on" onclick="pt(this,'mota')">Mô tả</button><button onclick="pt(this,'tp')">Thành phần</button><button onclick="pt(this,'cd')">Công dụng</button><button onclick="pt(this,'cach')">Cách dùng</button><button onclick="pt(this,'vid')">🎬 Video</button></div><div class="ptab-body" id="mb"></div>
+<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn btn-g" onclick="toast('🏪 Hiển thị danh sách cửa hàng CTV bán sản phẩm này')">🏪 Nơi bán</button><button class="btn btn-seal sm" onclick="toast('⚡ Chỉ CTV mới tạo được Landing Page — Đăng ký CTV ngay!')">⚡ Tạo Landing Page</button></div>
+<div style="font-size:12px;color:var(--mut);margin-top:12px">Chia sẻ: <b style="cursor:pointer" onclick="toast('📋 Copied')">📋 Copy</b> · <b style="cursor:pointer">Facebook</b> · <b style="cursor:pointer">Zalo</b></div>
+</div></div></div></div>
+
+<!-- CTV REGISTRATION MODAL -->
+<div class="overlay" id="ov-reg" onclick="if(event.target===this)closeOv('ov-reg')"><div class="modal sm"><button class="x" onclick="closeOv('ov-reg')">✕</button>
+<div class="reg-inner">
+  <div style="font-size:42px;text-align:center">🤝</div>
+  <h2 style="text-align:center">Đăng ký Cộng tác viên</h2>
+  <p style="text-align:center">Tạo cửa hàng riêng, bán sản phẩm FOHOWAY, kiếm thu nhập.</p>
+  <div class="reg-steps"><span class="on"></span><span></span><span></span></div>
+  <div class="field"><label>Họ tên (đúng CCCD)</label><input placeholder="Nguyễn Minh Anh"></div>
+  <div class="field"><label>Số điện thoại</label><input placeholder="09xx xxx xxx"></div>
+  <div class="field"><label>Email</label><input placeholder="email@example.com"></div>
+  <div class="field"><label>Mã giới thiệu (nếu có)</label><input placeholder="VD: MINHANH"></div>
+  <button class="btn btn-g" style="width:100%" onclick="toast('✅ OTP đã gửi qua Zalo/SMS — xác minh để tiếp tục Bước 2: KYC (CCCD, ảnh chân dung)')">Tiếp tục → Xác minh OTP</button>
+  <p style="font-size:11px;color:var(--mut);text-align:center;margin-top:12px">Bằng việc đăng ký, bạn đồng ý với <a href="#" style="color:var(--seal)">Điều khoản CTV</a> và <a href="#" style="color:var(--seal)">Chính sách bảo mật</a>.</p>
+</div></div></div>
+
+<!-- AI CHATBOT -->
+<div class="ai-bubble">
+  <div class="ai-window" id="ai-win">
+    <div class="ai-head"><span>🤖 FOHOWAY AI · Tư vấn dưỡng sinh</span><button onclick="toggleAI()">✕</button></div>
+    <div class="ai-body" id="ai-body">
+      <div class="ai-msg bot">Xin chào! Tôi là trợ lý AI của FOHOWAY. Hỏi tôi bất kỳ điều gì về sản phẩm, dưỡng sinh, hoặc cơ hội kinh doanh CTV nhé! 🌿</div>
+    </div>
+    <div class="ai-input"><input id="ai-inp" placeholder="Hỏi về sản phẩm, dưỡng sinh..." onkeydown="if(event.key==='Enter')sendAI()"><button onclick="sendAI()">Gửi</button></div>
+  </div>
+  <button class="ai-toggle" onclick="toggleAI()" title="Chat với AI FOHOWAY">🤖</button>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+const CATS=["Tất cả","Thực phẩm CSSK","Máy móc & thiết bị","Mỹ phẩm tự nhiên"];
+const P=[
+{n:"Đông trùng – Linh chi (Phúc Chính Khang)",c:"Thực phẩm CSSK",p:"910.000₫",o:"1.050.000₫",e:"🍄",mota:"Viên uống đông trùng + linh chi đỏ, hỗ trợ bồi bổ cơ thể.",tp:"<ul><li>Đông trùng hạ thảo 250mg</li><li>Linh chi đỏ 200mg</li></ul>",cd:"Hỗ trợ đề kháng, giảm mệt mỏi, giấc ngủ. <i>Không phải thuốc.</i>",cach:"Ngày 2 lần, 2 viên, trước ăn 30 phút."},
+{n:"Máy chăm sóc da – Tiểu Thần Tiên",c:"Máy móc & thiết bị",p:"7.800.000₫",o:"8.500.000₫",e:"✨",mota:"Đa chức năng: ion, siêu âm, nhiệt ấm.",tp:"<ul><li>Hợp kim, đầu mạ vàng</li><li>Pin 1200mAh</li></ul>",cd:"Đẩy dưỡng chất, nâng cơ.",cach:"10–15 phút/lần, 3–4 lần/tuần."},
+{n:"Gel Săn Chắc Tuyết Hoạt Tuyền (Vàng)",c:"Mỹ phẩm tự nhiên",p:"364.000₫",o:"420.000₫",e:"🌼",mota:"Gel massage thảo dược.",tp:"<ul><li>Nhân sâm, collagen</li></ul>",cd:"Săn chắc, cấp ẩm.",cach:"Massage 5–10 phút."},
+{n:"Kính Ion Âm FOHERB",c:"Máy móc & thiết bị",p:"1.560.000₫",o:"1.800.000₫",e:"👓",mota:"Kính ion âm, lọc blue-light.",tp:"<ul><li>Tròng HEV, gọng titan</li></ul>",cd:"Giảm mỏi mắt.",cach:"Đeo khi dùng màn hình."},
+{n:"Gel Dưỡng Ẩm Tuyết Hoạt Tuyền (Đỏ)",c:"Mỹ phẩm tự nhiên",p:"364.000₫",o:"420.000₫",e:"🌹",mota:"Gel làm dịu da nhạy cảm.",tp:"<ul><li>Lô hội, hồng sâm</li></ul>",cd:"Cấp ẩm.",cach:"Sáng tối."},
+{n:"Găng tay xung điện FOHOWAY",c:"Máy móc & thiết bị",p:"440.000₫",o:"520.000₫",e:"🧤",mota:"Phụ kiện massage bàn tay.",tp:"<ul><li>Sợi bạc dẫn điện</li></ul>",cd:"Lưu thông khí huyết.",cach:"15 phút cùng máy Magic."},
+{n:"Viên lọc ngải cứu",c:"Thực phẩm CSSK",p:"180.000₫",o:"210.000₫",e:"🌿",mota:"Viên lọc tinh chất ngải cứu.",tp:"<ul><li>Ngải cứu sấy lạnh nén</li></ul>",cd:"Thư giãn, làm ấm.",cach:"Lắp vào buồng xông."},
+{n:"Miếng lót chỉnh hình",c:"Máy móc & thiết bị",p:"2.860.000₫",o:"3.200.000₫",e:"🦶",mota:"Lót hỗ trợ tư thế bàn chân.",tp:"<ul><li>Memory-foam y tế</li></ul>",cd:"Giảm áp lực gót.",cach:"Đặt trong giày hằng ngày."}
+];
+const LIB={doc:[["📄","Catalogue 2026 (PDF)","120 SP · 48 trang","d"],["📄","Cẩm nang 3 học thuyết","Đào tạo CTV","d"],["📄","Chính sách bán hàng","07/2026","d"]],vid:[["🎬","Giới thiệu FOHOWAY","YouTube · 12:40","v"],["🎬","Hướng dẫn Tiểu Thần Tiên","TikTok series","v"],["🎬","Liệu trình kinh lạc","YouTube · 8:15","v"]],aud:[["🎧","Podcast #01 · Âm dương","24 phút","a"],["🎧","Podcast #02 · Ngũ tạng","31 phút","a"]]};
+
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById('pg-'+p).classList.add('on');document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));window.scrollTo({top:0,behavior:'smooth'})}
+function card(x,i){return`<div class="pc" onclick="op(${i})"><div class="pthumb">${x.e}</div><div class="pbody"><span class="tag g" style="font-size:10px">${x.c}</span><h3>${x.n}</h3><div class="rate">★★★★★</div><div class="price">${x.p}<s>${x.o}</s></div></div></div>`}
+document.getElementById('home-grid').innerHTML=P.slice(0,4).map((x,i)=>card(x,i)).join('');
+function renderGrid(c){document.getElementById('all-grid').innerHTML=P.map((x,i)=>({x,i})).filter(o=>c==='Tất cả'||o.x.c===c).map(o=>card(o.x,o.i)).join('')}
+document.getElementById('filters').innerHTML=CATS.map((c,i)=>`<button class="${i===0?'on':''}" onclick="fcat(this,'${c}')">${c}</button>`).join('');
+function fcat(b,c){document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderGrid(c)}
+renderGrid('Tất cả');
+let CUR=0;function op(i){CUR=i;const x=P[i];document.getElementById('me').textContent=x.e;document.getElementById('mn').textContent=x.n;document.getElementById('mc').textContent=x.c;document.getElementById('mp').textContent=x.p;document.getElementById('mo').textContent=x.o;document.querySelectorAll('.ptabs button').forEach((b,j)=>b.classList.toggle('on',j===0));document.getElementById('mb').innerHTML=x.mota;document.getElementById('ov-pd').classList.add('on')}
+function pt(b,k){document.querySelectorAll('.ptabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');const x=P[CUR];document.getElementById('mb').innerHTML=k==='mota'?x.mota:k==='tp'?x.tp:k==='cd'?x.cd:k==='cach'?x.cach:'<div style="background:var(--gd);color:#9fe0c5;border-radius:12px;padding:28px;text-align:center">▶ Video (YouTube/TikTok)</div>'}
+function libTab(b,k){document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('lib-grid').innerHTML=LIB[k].map(x=>`<div class="lc"><div class="lic ${x[3]}">${x[0]}</div><div><h4>${x[1]}</h4><small>${x[2]}</small><div style="margin-top:6px"><button class="btn btn-line sm" onclick="toast('⬇ Mở nội dung')">Mở</button></div></div></div>`).join('')}
+libTab(document.querySelector('#pg-thuvien .filters button'),'doc');
+function openReg(){document.getElementById('ov-reg').classList.add('on')}
+function closeOv(id){document.getElementById(id).classList.remove('on')}
+// AI Chatbot
+function toggleAI(){document.getElementById('ai-win').classList.toggle('on')}
+function sendAI(){const inp=document.getElementById('ai-inp');const q=inp.value.trim();if(!q)return;const body=document.getElementById('ai-body');body.innerHTML+=`<div class="ai-msg user">${q}</div>`;inp.value='';setTimeout(()=>{body.innerHTML+=`<div class="ai-msg bot">Cảm ơn bạn! Đây là prototype — trong production, AI sẽ trả lời dựa trên cơ sở dữ liệu sản phẩm, kiến thức dưỡng sinh và thông tin FOHOWAY được cấu hình qua Admin. 🌿</div>`;body.scrollTop=body.scrollHeight},600)}
+let TT;function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');clearTimeout(TT);TT=setTimeout(()=>e.classList.remove('on'),2800)}
+</script>
+</body></html>

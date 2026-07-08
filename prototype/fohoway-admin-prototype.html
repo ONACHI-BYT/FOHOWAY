@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FOHOWAY Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#006B3F;--gd:#004D2C;--gm:#005A35;--gs:#E8F5E9;--gold:#D4A843;--gos:#F5ECD7;--seal:#C0392B;--bg:#F5F8F5;--paper:#fff;--ink:#1A2E1A;--mut:#5D6B5D;--line:#D8E4D8;--ok:#2E7D5B;--warn:#C48A1A}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Assistant',system-ui,sans-serif;-webkit-font-smoothing:antialiased,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
+h1,h2,h3{font-family:'Cormorant Garamond',serif}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--gd);color:#9cc5aa;padding:20px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;gap:10px;align-items:center;padding:0 8px 18px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
+.brand .mk{width:36px;height:36px;border-radius:50%;background:var(--g);border:2px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;flex:none}
+.brand b{color:#fff;font-family:'Cormorant Garamond',serif;letter-spacing:.03em}.brand small{display:block;font-size:9px;letter-spacing:.25em;color:var(--gold)}
+.mg{font-size:9.5px;letter-spacing:.18em;color:#6d8a7d;padding:14px 10px 5px;text-transform:uppercase;font-weight:600}
+.menu button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;color:#9cc5aa;font-family:inherit;font-size:13px;padding:9px 11px;border-radius:9px;cursor:pointer;text-align:left;transition:.15s}
+.menu button:hover{background:rgba(255,255,255,.07);color:#fff}.menu button.on{background:var(--gold);color:var(--gd);font-weight:600}
+.menu button i{font-style:normal;width:18px;text-align:center}
+main{padding:24px 28px 50px}
+.tophead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.tophead h1{font-size:22px;color:var(--gd)}.tophead small{color:var(--mut);font-size:12px;display:block;margin-top:2px}
+.ach{display:flex;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:5px 12px 5px 6px;font-size:12px}
+.ach .a{width:28px;height:28px;border-radius:50%;background:var(--seal);color:#fff;display:grid;place-items:center;font-weight:700;font-size:11px}
+.vw{display:none}.vw.on{display:block;animation:fd .3s}@keyframes fd{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:999px;transition:.2s}
+.btn.sm{padding:7px 13px;font-size:12px}.btn-g{background:var(--g);color:#fff}.btn-g:hover{background:var(--gd)}.btn-seal{background:var(--seal);color:#fff}
+.btn-line{background:none;color:var(--g);border:1.5px solid var(--g)}.btn-line:hover{background:var(--g);color:#fff}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px}.pill.g{background:#DFF0E6;color:var(--ok)}.pill.y{background:#FBEFD4;color:var(--warn)}.pill.r{background:#F8DFDA;color:var(--seal)}.pill.b{background:#E3E9F5;color:#3D5A99}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+.card h3{font-size:15px;color:var(--gd);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.note{background:var(--gos);border-left:4px solid var(--gold);border-radius:0 9px 9px 0;padding:11px 14px;font-size:12px;margin-top:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kp{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.kp small{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}.kp b{display:block;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gd);margin-top:3px}
+.kp .d{font-size:10.5px;font-weight:600;margin-top:2px}.up{color:var(--ok)}.dn{color:var(--seal)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}.t th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:left;padding:8px 9px;border-bottom:1.5px solid var(--line)}
+.t td{padding:9px;border-bottom:1px solid #eef2ee;vertical-align:middle}.t tr:hover td{background:#f8faf8}
+.tg{position:relative;width:38px;height:21px;background:#c8d8c8;border-radius:99px;cursor:pointer;transition:.2s;display:inline-block;vertical-align:middle}
+.tg::after{content:"";position:absolute;top:2.5px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}.tg.on{background:var(--ok)}.tg.on::after{left:19px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.chart{display:flex;align-items:flex-end;gap:7px;height:140px;padding-top:8px}.chart .bar{flex:1;background:linear-gradient(180deg,var(--g),var(--gd));border-radius:5px 5px 0 0;position:relative;transition:.3s}.chart .bar:hover{filter:brightness(1.2)}.chart .bar span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:9px;color:var(--mut)}
+.field{margin-bottom:11px}.field label{display:block;font-size:11px;font-weight:600;margin-bottom:4px;color:var(--gd)}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;font-family:inherit;font-size:13px}.field input:focus{outline:2px solid var(--g)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.sec-row{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;cursor:grab;transition:.15s}.sec-row:hover{border-color:var(--gold)}
+.sec-row .drag{color:#b3bfb3;font-size:14px}.sec-row b{font-size:12.5px;color:var(--gd)}.sec-row small{color:var(--mut);display:block;font-size:11px}.sec-row .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
+.schema{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.ent{background:#fff;border:1.5px solid var(--line);border-radius:11px;overflow:hidden;font-size:11.5px}
+.ent h4{background:var(--g);color:#fff;padding:8px 12px;font-size:12px;font-weight:600;font-family:'Assistant',sans-serif}.ent h4.gold{background:var(--gold);color:var(--gd)}.ent h4.seal{background:var(--seal)}
+.ent ul{list-style:none;padding:8px 12px}.ent li{padding:2.5px 0;border-bottom:1px dashed #eef2ee;color:#454a41}.ent li b{color:var(--seal);font-weight:600}.ent li:last-child{border:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gd);color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;z-index:99;transition:.3s;opacity:0}.toast.on{transform:translateX(-50%);opacity:1}
+@media(max-width:1024px){.app{grid-template-columns:200px 1fr}main{padding:20px}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.app{grid-template-columns:1fr}aside{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px;padding:10px}aside .mg,.brand{display:none}.menu button{font-size:11px;padding:7px 10px}.kpis{grid-template-columns:1fr 1fr}.grid2,.schema,.row2{grid-template-columns:1fr}main{padding:16px 14px}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr}table.t{font-size:11px}.t th,.t td{padding:6px 4px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="mk">和</div><div><b>FOHOWAY</b><small>ADMIN CONSOLE</small></div></div>
+  <div class="menu">
+    <div class="mg">Tổng quan</div>
+    <button class="on" data-v="dash" onclick="av('dash')"><i>📊</i> Dashboard</button>
+    <div class="mg">Nội dung & Frontend</div>
+    <button data-v="cms" onclick="av('cms')"><i>🧱</i> CMS trang chủ</button>
+    <button data-v="products" onclick="av('products')"><i>📦</i> Sản phẩm & danh mục</button>
+    <button data-v="library" onclick="av('library')"><i>📚</i> Thư viện</button>
+    <div class="mg">Mạng lưới CTV</div>
+    <button data-v="ctv" onclick="av('ctv')"><i>🤝</i> CTV & cửa hàng</button>
+    <button data-v="lp" onclick="av('lp')"><i>⚡</i> Mẫu Landing Pages</button>
+    <button data-v="orders" onclick="av('orders')"><i>🧾</i> Đơn hàng toàn NTT</button>
+    <div class="mg">AI & Công nghệ</div>
+    <button data-v="ai" onclick="av('ai')"><i>🤖</i> FOHOWAY AI Chatbot</button>
+    <div class="mg">Nền tảng</div>
+    <button data-v="addons" onclick="av('addons')"><i>🧩</i> Chợ Add-ons</button>
+    <button data-v="money" onclick="av('money')"><i>💰</i> Gói phí & doanh thu</button>
+    <button data-v="db" onclick="av('db')"><i>🗄</i> Cơ sở dữ liệu</button>
+    <button data-v="roles" onclick="av('roles')"><i>🔐</i> Phân quyền & log</button>
+  </div>
+</aside>
+<main>
+<div class="tophead"><div><h1 id="vt">Dashboard</h1><small id="vs">Toàn cảnh nền tảng FOHOWAY Việt Nam</small></div><div class="ach"><div class="a">SA</div><div><b>Super Admin</b></div></div></div>
+
+<!-- DASHBOARD -->
+<div class="vw on" id="v-dash">
+  <div class="kpis"><div class="kp"><small>Doanh thu T7</small><b>2,84 tỷ</b><div class="d up">▲ 18%</div></div><div class="kp"><small>Đơn hàng</small><b>4.216</b><div class="d up">▲ 9,4%</div></div><div class="kp"><small>CTV hoạt động</small><b>1.038</b><div class="d up">+112 mới</div></div><div class="kp"><small>DT Add-ons & PRO</small><b>186 tr</b><div class="d up">▲ 31%</div></div></div>
+  <div class="grid2"><div class="card"><h3>GMV 12 tuần <span class="pill b">Toàn NTT</span></h3><div class="chart" id="chart"></div></div>
+  <div class="card"><h3>Việc cần xử lý</h3><table class="t"><tr><td>⚡ 953 Landing đang active</td><td style="text-align:right"><button class="btn btn-g sm" onclick="av('lp')">Xem</button></td></tr><tr><td>🤝 61 KYC chờ xác minh</td><td style="text-align:right"><button class="btn btn-line sm" onclick="av('ctv')">Xem</button></td></tr><tr><td>🧾 8 khiếu nại quá SLA</td><td style="text-align:right"><button class="btn btn-line sm" onclick="av('orders')">Xem</button></td></tr></table>
+  <div class="note">🛡 Mẫu chuẩn đảm bảo 100% tuân thủ TPCN — CTV không thể sửa nội dung SP.</div></div></div>
+</div>
+
+<!-- CMS -->
+<div class="vw" id="v-cms">
+  <div class="grid2"><div class="card"><h3>Bố cục Frontend <span class="pill b">Kéo thả & bật/tắt</span></h3><div id="cms-rows"></div><button class="btn btn-line sm" onclick="toast('➕ Thêm khối')">➕ Thêm khối</button> <button class="btn btn-g sm" onclick="toast('✅ Đã xuất bản')">Xuất bản</button></div>
+  <div><div class="card"><h3>Tùy biến giao diện Frontend</h3><div class="row2"><div class="field"><label>Color Scheme</label><select><option>FOHOWAY Default (Green + Gold)</option><option>Sự kiện Tết</option><option>Campaign mùa hè</option></select></div><div class="field"><label>Font chữ</label><select><option>Be Vietnam Pro + Playfair Display</option><option>Inter + Lora</option></select></div></div>
+  <table class="t" style="margin-top:8px"><tr><td>Đa ngôn ngữ (VI + EN + RU)</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Popup thu lead</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>SEO: sitemap + schema.org</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Chế độ bảo trì</td><td style="text-align:right"><div class="tg" onclick="this.classList.toggle('on')"></div></td></tr></table></div>
+  <div class="card"><h3>Thêm/bớt chức năng & công cụ</h3><table class="t"><tr><td>🤖 AI Chatbot trên Frontend</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>🏪 Đăng ký CTV trên Frontend</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>🗺 Bản đồ spa</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>📺 Video nổi bật trên Hero</td><td style="text-align:right"><div class="tg" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>🔥 Countdown sự kiện</td><td style="text-align:right"><div class="tg" onclick="this.classList.toggle('on')"></div></td></tr></table></div></div></div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="vw" id="v-products">
+  <div class="grid2">
+    <div>
+      <div class="card"><h3>Kho sản phẩm <span><button class="btn btn-line sm" onclick="toast('⬆ Import Excel')">⬆ Import</button> <button class="btn btn-g sm" onclick="showAddProduct()">➕ Thêm SP mới</button></span></h3>
+        <table class="t"><tr><th>Ảnh</th><th>Sản phẩm</th><th>SKU</th><th>Danh mục</th><th>Giá bán</th><th>Khung CTV</th><th>Tồn</th><th>TT</th><th></th></tr>
+          <tr><td><div style="width:40px;height:40px;background:#f0f0ec;border-radius:6px;display:grid;place-items:center;font-size:18px">🍄</div></td><td><b>Đông trùng – Linh chi</b><br><small style="color:var(--mut)">Phúc Chính Khang · 60 viên</small></td><td style="font-size:11px;color:var(--mut)">FHW-PCK-60</td><td>TPCN</td><td>910k</td><td>870k–1.050k</td><td>1.240</td><td><span class="pill g">ON</span></td><td><button class="btn btn-line sm" onclick="showAddProduct()">Sửa</button></td></tr>
+          <tr><td><div style="width:40px;height:40px;background:#f0f0ec;border-radius:6px;display:grid;place-items:center;font-size:18px">✨</div></td><td><b>Máy Tiểu Thần Tiên</b><br><small style="color:var(--mut)">Đa năng · ION + EMS</small></td><td style="font-size:11px;color:var(--mut)">FHW-TTT-01</td><td>Thiết bị</td><td>7.800k</td><td>Cố định</td><td>86</td><td><span class="pill g">ON</span></td><td><button class="btn btn-line sm" onclick="showAddProduct()">Sửa</button></td></tr>
+          <tr><td><div style="width:40px;height:40px;background:#f0f0ec;border-radius:6px;display:grid;place-items:center;font-size:18px">🌼</div></td><td><b>Gel Tuyết Hoạt Tuyền (Vàng)</b><br><small style="color:var(--mut)">Săn chắc · 250ml</small></td><td style="font-size:11px;color:var(--mut)">FHW-GEL-V</td><td>Mỹ phẩm</td><td>364k</td><td>340k–420k</td><td style="color:var(--seal);font-weight:700">12 ⚠</td><td><span class="pill g">ON</span></td><td><button class="btn btn-line sm" onclick="showAddProduct()">Sửa</button></td></tr>
+          <tr><td><div style="width:40px;height:40px;background:#f0f0ec;border-radius:6px;display:grid;place-items:center;font-size:18px">👓</div></td><td><b>Kính Ion Âm FOHERB</b><br><small style="color:var(--mut)">Lọc blue-light</small></td><td style="font-size:11px;color:var(--mut)">FHW-KIA-01</td><td>Thiết bị</td><td>1.560k</td><td>1.480k–1.800k</td><td>310</td><td><span class="pill y">Ẩn</span></td><td><button class="btn btn-line sm" onclick="showAddProduct()">Sửa</button></td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card"><h3>Danh mục sản phẩm</h3>
+        <table class="t"><tr><th>Danh mục</th><th>Số SP</th><th></th></tr>
+          <tr><td><b>Thực phẩm chức năng (TPCN)</b></td><td>3</td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+          <tr><td><b>Máy móc & Thiết bị</b></td><td>4</td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+          <tr><td><b>Mỹ phẩm tự nhiên</b></td><td>2</td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+        </table>
+        <button class="btn btn-line sm" style="margin-top:10px" onclick="toast('➕ Thêm danh mục mới')">➕ Thêm danh mục</button>
+      </div>
+      <div class="card"><h3>Thống kê kho</h3>
+        <table class="t">
+          <tr><td>Tổng SP</td><td style="text-align:right"><b>9</b></td></tr>
+          <tr><td>Đang hiển thị</td><td style="text-align:right"><b>7</b></td></tr>
+          <tr><td>Tồn kho thấp (<20)</td><td style="text-align:right"><b style="color:var(--seal)">2</b></td></tr>
+          <tr><td>Hết hàng</td><td style="text-align:right"><b>0</b></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM THÊM/SỬA SẢN PHẨM -->
+  <div id="product-form" style="display:none">
+    <div class="card" style="border:2px solid var(--gold);margin-top:16px">
+      <h3>📦 Thêm / Chỉnh sửa sản phẩm <span><button class="btn btn-line sm" onclick="document.getElementById('product-form').style.display='none'">✕ Đóng</button></span></h3>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <!-- CỘT TRÁI: Thông tin cơ bản -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--jade,#0D6B4F);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--gold,#B8860B)">Thông tin cơ bản</div>
+
+          <div class="field"><label>Tên sản phẩm *</label><input value="Đông trùng – Linh chi (Phúc Chính Khang)" placeholder="VD: Đông trùng – Linh chi"></div>
+
+          <div class="field"><label>Tên phụ / Mô tả ngắn</label><input value="Viên uống bồi bổ cơ thể, hỗ trợ tăng đề kháng" placeholder="Hiển thị dưới tên SP"></div>
+
+          <div class="row2">
+            <div class="field"><label>Mã SKU *</label><input value="FHW-PCK-60" placeholder="FHW-XXX-00"></div>
+            <div class="field"><label>Barcode / EAN</label><input placeholder="8936..."></div>
+          </div>
+
+          <div class="row2">
+            <div class="field"><label>Danh mục *</label><select><option>Thực phẩm chức năng</option><option>Máy móc & Thiết bị</option><option>Mỹ phẩm tự nhiên</option></select></div>
+            <div class="field"><label>Thương hiệu</label><input value="FOHOWAY / FOHERB" readonly style="background:#f5f5f2"></div>
+          </div>
+
+          <div class="field"><label>Xuất xứ</label><input value="Viện R&D Thiên Tân, Trung Quốc" placeholder="Nơi sản xuất"></div>
+
+          <div class="field"><label>Quy cách đóng gói</label><input value="Hộp 60 viên × 350mg" placeholder="VD: Hộp 60 viên × 350mg"></div>
+
+          <div class="row2">
+            <div class="field"><label>Khối lượng (gram)</label><input value="150" type="number"></div>
+            <div class="field"><label>Kích thước (cm)</label><input value="8 × 8 × 12" placeholder="D × R × C"></div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--jade,#0D6B4F);margin:20px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gold,#B8860B)">Giá & Kho</div>
+
+          <div class="row2">
+            <div class="field"><label>Giá bán (chưa thuế) *</label><input value="910.000" type="number" placeholder="₫"></div>
+            <div class="field"><label>Giá niêm yết (MSRP)</label><input value="1.050.000" type="number" placeholder="₫"></div>
+          </div>
+
+          <div class="row2">
+            <div class="field"><label>Giá sàn CTV (min) *</label><input value="870.000" type="number" placeholder="₫"></div>
+            <div class="field"><label>Giá trần CTV (max) *</label><input value="1.050.000" type="number" placeholder="₫"></div>
+          </div>
+
+          <div class="row2">
+            <div class="field"><label>Tồn kho hiện tại</label><input value="1240" type="number"></div>
+            <div class="field"><label>Cảnh báo kho thấp</label><input value="20" type="number" placeholder="Đơn vị"></div>
+          </div>
+
+          <div class="row2">
+            <div class="field"><label>Thuế VAT</label><select><option>8% (TPCN)</option><option>10%</option><option>Miễn thuế</option></select></div>
+            <div class="field"><label>Trạng thái</label><select><option>Đang bán (Hiển thị)</option><option>Ẩn (Không hiển thị)</option><option>Hết hàng</option><option>Ngừng kinh doanh</option></select></div>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: Nội dung, media, SEO -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--jade,#0D6B4F);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--gold,#B8860B)">Mô tả & Nội dung</div>
+
+          <div class="field"><label>Mô tả chi tiết (WYSIWYG) *</label><textarea rows="3" placeholder="Mô tả sản phẩm đầy đủ...">Viên uống đông trùng hạ thảo kết hợp linh chi đỏ theo nguyên lý "quân – thần – tá – sứ" của Trung y. Nuôi cấy tại Viện R&D Thiên Tân, đạt chuẩn GMP quốc tế.</textarea></div>
+
+          <div class="field"><label>Thành phần</label><textarea rows="2" placeholder="Liệt kê thành phần...">Đông trùng hạ thảo (Cordyceps sinensis) 250mg, Linh chi đỏ (Ganoderma lucidum) 200mg, phụ liệu vừa đủ 1 viên.</textarea></div>
+
+          <div class="field"><label>Công dụng <span class="pill r" style="font-size:8px">Kiểm duyệt TPCN</span></label><textarea rows="2" placeholder="Hỗ trợ... (không dùng từ cấm: chữa bệnh, trị dứt điểm...)">Hỗ trợ tăng cường sức đề kháng, giảm mệt mỏi, bồi bổ cơ thể. Hỗ trợ cải thiện giấc ngủ.</textarea></div>
+
+          <div class="field"><label>Cách sử dụng</label><textarea rows="2" placeholder="Liều lượng, thời điểm...">Ngày uống 2 lần, mỗi lần 2 viên, trước bữa ăn 30 phút. Dùng liên tục 2-3 tháng để đạt hiệu quả tốt nhất.</textarea></div>
+
+          <div class="field"><label>Đối tượng sử dụng</label><input value="Người lớn từ 18 tuổi, người suy nhược, mệt mỏi, mất ngủ" placeholder="VD: Người lớn, trẻ em trên 12 tuổi..."></div>
+
+          <div class="field"><label>Cảnh báo / Chống chỉ định</label><input value="Không dùng cho phụ nữ mang thai, trẻ em dưới 18 tuổi" placeholder="Lưu ý an toàn"></div>
+
+          <div class="field"><label>Số đăng ký / Công bố</label><input value="12345/2024/ĐKSP" placeholder="Số ĐKSP / CBSP"></div>
+
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--jade,#0D6B4F);margin:20px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gold,#B8860B)">Hình ảnh & Video</div>
+
+          <div class="field"><label>Ảnh sản phẩm * (tối đa 8 ảnh, kéo thả để sắp xếp)</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="width:80px;height:80px;background:#f0f0ec;border-radius:8px;display:grid;place-items:center;font-size:32px;border:1.5px dashed #ccc">🍄</div>
+              <div style="width:80px;height:80px;background:#f0f0ec;border-radius:8px;display:grid;place-items:center;font-size:32px;border:1.5px dashed #ccc">📦</div>
+              <div style="width:80px;height:80px;background:#f5f5f2;border-radius:8px;display:grid;place-items:center;font-size:24px;border:1.5px dashed #bbb;cursor:pointer;color:#999" onclick="toast('📷 Upload ảnh sản phẩm')">+</div>
+            </div>
+            <small style="color:var(--mut);font-size:10px;margin-top:4px;display:block">JPG/PNG, tối thiểu 800×800px. Ảnh đầu tiên = ảnh đại diện.</small>
+          </div>
+
+          <div class="field"><label>Video sản phẩm</label><input placeholder="Link YouTube hoặc TikTok" value="https://youtube.com/watch?v=..."></div>
+
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--jade,#0D6B4F);margin:20px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gold,#B8860B)">SEO & Hiển thị</div>
+
+          <div class="field"><label>Tiêu đề SEO (title tag)</label><input value="Đông trùng hạ thảo Linh chi FOHOWAY – Phúc Chính Khang" placeholder="60 ký tự tối ưu"></div>
+
+          <div class="field"><label>Mô tả SEO (meta description)</label><textarea rows="2" placeholder="155 ký tự tối ưu">Viên uống đông trùng linh chi FOHOWAY chính hãng. Hỗ trợ đề kháng, giảm mệt mỏi. Chuẩn GMP. Freeship.</textarea></div>
+
+          <div class="field"><label>URL slug</label><input value="dong-trung-linh-chi-phuc-chinh-khang" placeholder="ten-san-pham"></div>
+
+          <div class="field"><label>Tags (phân cách bằng dấu phẩy)</label><input value="đông trùng, linh chi, TPCN, bổ phổi, tăng đề kháng, ngủ ngon" placeholder="tag1, tag2, tag3"></div>
+        </div>
+      </div>
+
+      <div style="background:#f9f8f5;border-radius:8px;padding:16px;margin-top:16px;font-size:12px;color:var(--mut,#666)">
+        <b style="color:var(--ink,#1a1a1a)">⚠ Lưu ý tuân thủ:</b> Nội dung "Công dụng" sẽ được <b>AI tự động quét từ cấm TPCN</b> (chữa bệnh, trị dứt điểm, đặc trị, thay thế thuốc...). Nội dung vi phạm sẽ bị highlight đỏ và yêu cầu sửa trước khi lưu. Nội dung SP sau khi duyệt sẽ được <b>đồng bộ tự động</b> sang tất cả cửa hàng CTV và Landing Page.
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
+        <button class="btn btn-line" onclick="document.getElementById('product-form').style.display='none'">Hủy</button>
+        <button class="btn btn-line" onclick="toast('💾 Đã lưu nháp')">Lưu nháp</button>
+        <button class="btn btn-g" onclick="toast('✅ Đã lưu & xuất bản sản phẩm → đồng bộ tới tất cả CTV')">Lưu & Xuất bản</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">📌 <b>Quy trình:</b> Thêm SP → AI quét tuân thủ → Admin duyệt → Xuất bản → Đồng bộ tới kho CTV (CTV chọn SP & đặt giá trong khung).</div>
+</div>
+<div class="vw" id="v-library"><div class="card"><h3>Kho nội dung <span><button class="btn btn-g sm" onclick="toast('⬆ Tải lên')">⬆ Tải lên</button></span></h3>
+<table class="t"><tr><th>Nội dung</th><th>Loại</th><th>Quyền</th><th>Xem</th><th>Nguồn</th></tr>
+<tr><td>📄 Catalogue 2026</td><td>PDF</td><td><span class="pill g">Công khai</span></td><td>8.4k</td><td>Upload</td></tr>
+<tr><td>🎬 Giới thiệu FOHOWAY</td><td>Video</td><td><span class="pill g">Công khai</span></td><td>21k</td><td>YouTube API</td></tr>
+<tr><td>🎬 Đào tạo CTV</td><td>Video</td><td><span class="pill y">Chỉ CTV</span></td><td>1.9k</td><td>Upload</td></tr>
+<tr><td>🎧 Podcast #02</td><td>Audio</td><td><span class="pill g">Công khai</span></td><td>3.5k</td><td>RSS</td></tr></table>
+<div class="note">🔄 Đồng bộ tự động YouTube & TikTok chính chủ qua API.</div></div></div>
+
+<!-- CTV -->
+<div class="vw" id="v-ctv">
+  <div class="kpis"><div class="kp"><small>Tổng CTV</small><b>1.284</b></div><div class="kp"><small>Chờ KYC</small><b style="color:var(--warn)">61</b></div><div class="kp"><small>Cửa hàng mở</small><b>1.038</b></div><div class="kp"><small>Spa đối tác</small><b>27</b></div></div>
+  <div class="card"><h3>Hồ sơ CTV</h3><table class="t"><tr><th>CTV</th><th>KYC</th><th>Cửa hàng</th><th>Gói</th><th>Giới thiệu</th><th></th></tr>
+  <tr><td><b>Ng. Minh Anh</b></td><td><span class="pill g">XM</span></td><td>/s/minh-anh</td><td><span class="pill y">PRO</span></td><td>Lê Hải Yến</td><td><button class="btn btn-line sm">Chi tiết</button></td></tr>
+  <tr><td><b>Phạm Đức Long</b></td><td><span class="pill y">Chờ</span></td><td>—</td><td>—</td><td>Trần Q. Huy</td><td><button class="btn btn-g sm" onclick="toast('✅ Duyệt KYC')">Duyệt</button> <button class="btn btn-seal sm" onclick="toast('❌ Từ chối')">Từ chối</button></td></tr></table></div>
+</div>
+
+<!-- LANDING PAGE TEMPLATES -->
+<div class="vw" id="v-lp">
+  <div class="grid2">
+    <div class="card"><h3>🎨 Mẫu Landing chuẩn <span><button class="btn btn-g sm" onclick="toast('➕ Tạo mẫu mới')">➕ Tạo mẫu</button></span></h3>
+      <p style="font-size:12.5px;color:var(--mut);margin-bottom:14px">Mẫu do Admin tạo sẵn — CTV chỉ chọn mẫu + sản phẩm → xuất bản tức thì, <b>không cần duyệt</b>. Hệ thống tự gắn thông tin CTV.</p>
+      <table class="t"><tr><th>Mẫu</th><th>Mô tả</th><th>CTV dùng</th><th>TT</th><th></th></tr>
+        <tr><td>🌿 <b>Thảo Mộc Dưỡng Sinh</b></td><td>Kể chuyện nguồn gốc, thiên nhiên</td><td>412</td><td><span class="pill g">Active</span></td><td><button class="btn btn-line sm" onclick="toast('✏ Chỉnh mẫu')">Sửa</button></td></tr>
+        <tr><td>⚡ <b>Flash Sale</b></td><td>Countdown, CTA khẩn cấp</td><td>287</td><td><span class="pill g">Active</span></td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+        <tr><td>🎓 <b>Chuyên gia Khuyên dùng</b></td><td>Video, chứng nhận GMP</td><td>156</td><td><span class="pill g">Active</span></td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+        <tr><td>💬 <b>Câu chuyện Thực tế</b></td><td>Trải nghiệm, before/after</td><td>98</td><td><span class="pill g">Active</span></td><td><button class="btn btn-line sm">Sửa</button></td></tr>
+        <tr><td>🎁 <b>Quà tặng sức khỏe</b></td><td>Tặng người thân</td><td>—</td><td><span class="pill y">Nháp</span></td><td><button class="btn btn-g sm" onclick="toast('▶ Kích hoạt')">Kích hoạt</button></td></tr>
+      </table>
+      <div class="note">📐 Mỗi mẫu gồm: Hero · Mô tả SP · Công dụng · Testimonial · Giá + CTA · Footer pháp lý. Admin thiết kế 1 lần, CTV dùng cho mọi SP.</div>
+    </div>
+    <div>
+      <div class="card"><h3>📊 Thống kê Landing toàn NTT</h3>
+        <div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kp"><small>Tổng LP active</small><b>953</b></div><div class="kp"><small>Lượt xem T7</small><b>142k</b></div><div class="kp"><small>Đơn từ LP</small><b>1.284</b></div><div class="kp"><small>CVR trung bình</small><b>0,9%</b></div></div>
+      </div>
+      <div class="card"><h3>🛡 Nội dung tự động kiểm soát</h3>
+        <p style="font-size:12.5px;color:var(--mut);margin-bottom:10px">Vì CTV dùng mẫu chuẩn, nội dung SP được lấy từ kho sản phẩm (đã duyệt). Không có rủi ro quảng cáo sai.</p>
+        <table class="t">
+          <tr><td>Mô tả SP</td><td><span class="pill g">Từ kho SP gốc</span></td></tr>
+          <tr><td>Công dụng</td><td><span class="pill g">Từ kho SP gốc</span></td></tr>
+          <tr><td>Giá</td><td><span class="pill g">Trong khung Admin</span></td></tr>
+          <tr><td>Thông tin CTV</td><td><span class="pill g">Tự gắn từ profile</span></td></tr>
+          <tr><td>Disclaimer TPCN</td><td><span class="pill g">Bắt buộc, ko sửa được</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div class="vw" id="v-orders"><div class="card"><h3>Đơn hàng toàn nền tảng</h3>
+<table class="t"><tr><th>Mã</th><th>Cửa hàng</th><th>Khách</th><th>TT</th><th>Ship</th><th>Giá trị</th><th>TT</th></tr>
+<tr><td>#88231</td><td>/s/minh-anh</td><td>Đỗ Thị Hòa</td><td>MoMo ✓</td><td>GHN</td><td>1.274k</td><td><span class="pill b">Đang giao</span></td></tr>
+<tr><td>#88230</td><td>/s/suckhoevang</td><td>Bùi Văn Nam</td><td>COD</td><td>GHTK</td><td>910k</td><td><span class="pill y">Chờ lấy</span></td></tr>
+<tr><td>#88226</td><td>/s/foherb-dn</td><td>Lý Mai</td><td>CK ✓</td><td>VPost</td><td>7.800k</td><td><span class="pill g">Hoàn tất</span></td></tr></table>
+<div class="note">💸 Cổng TT → ví trung gian → đối soát → chia: CTV (lãi) · NTT (phí) · thuế TNCN.</div></div></div>
+
+<!-- AI CHATBOT SETUP -->
+<div class="vw" id="v-ai">
+  <div class="grid2">
+    <div class="card"><h3>🤖 Cấu hình FOHOWAY AI Chatbot</h3>
+      <p style="font-size:12.5px;color:var(--mut);margin-bottom:14px">Tạo chatbot AI riêng cho FOHOWAY — tư vấn sản phẩm, dưỡng sinh, thông tin công ty, hỗ trợ CTV.</p>
+      <div class="field"><label>Model AI</label><select><option>Claude Sonnet 4.6 (Anthropic)</option><option>GPT-4o (OpenAI)</option><option>Gemini Pro (Google)</option></select></div>
+      <div class="field"><label>API Key</label><input value="sk-ant-api03-••••••••••••••••" type="password"></div>
+      <div class="field"><label>Tên chatbot</label><input value="FOHOWAY AI · Tư vấn dưỡng sinh"></div>
+      <div class="field"><label>System Prompt (hướng dẫn AI)</label><textarea rows="5" style="font-size:12px">Bạn là trợ lý AI chính thức của FOHOWAY Việt Nam. Bạn tư vấn về: sản phẩm FOHOWAY (đông trùng hạ thảo, linh chi, thiết bị dưỡng sinh), 3 học thuyết dưỡng sinh (Dinh dưỡng, Hành vi, Tâm lý), cơ hội kinh doanh CTV. Luôn nhắc: "Sản phẩm không phải là thuốc, không thay thế thuốc chữa bệnh." Trả lời bằng tiếng Việt, thân thiện, chuyên nghiệp.</textarea></div>
+      <table class="t" style="margin-top:8px"><tr><td>Hiển thị trên Frontend (trang chính)</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Cho phép CTV bật AI trên cửa hàng</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Tự động training từ kho sản phẩm</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Tự động training từ thư viện tài liệu</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Lưu log hội thoại (phân tích)</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr></table>
+      <button class="btn btn-g" style="width:100%;margin-top:14px" onclick="toast('💾 Đã lưu & deploy AI Chatbot')">Lưu & Deploy Chatbot</button>
+    </div>
+    <div>
+      <div class="card"><h3>📊 Thống kê AI Chatbot</h3>
+        <div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kp"><small>Hội thoại T7</small><b>3.412</b></div><div class="kp"><small>Câu hỏi/ngày</small><b>156</b></div><div class="kp"><small>Tỷ lệ hài lòng</small><b>94%</b></div><div class="kp"><small>Dẫn đến mua hàng</small><b>8,2%</b></div></div>
+      </div>
+      <div class="card"><h3>📚 Nguồn kiến thức AI</h3>
+        <table class="t"><tr><td>📦 Kho sản phẩm (8 SP)</td><td><span class="pill g">Đã sync</span></td></tr><tr><td>📄 Thư viện tài liệu (12 file)</td><td><span class="pill g">Đã sync</span></td></tr><tr><td>🏢 Thông tin công ty</td><td><span class="pill g">Đã sync</span></td></tr><tr><td>❓ FAQ cộng đồng (45 câu)</td><td><span class="pill g">Đã sync</span></td></tr><tr><td>🗣 Log hội thoại (training)</td><td><span class="pill y">2.1k chờ review</span></td></tr></table>
+        <button class="btn btn-line sm" style="margin-top:8px" onclick="toast('🔄 Đang sync lại toàn bộ nguồn kiến thức...')">🔄 Sync lại</button>
+      </div>
+      <div class="card"><h3>⚠ Từ khóa cấm (tuân thủ TPCN)</h3>
+        <p style="font-size:12px;color:var(--mut);margin-bottom:8px">AI sẽ không bao giờ nói những từ này, kể cả khách hỏi.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill r">chữa bệnh</span><span class="pill r">trị dứt điểm</span><span class="pill r">đặc trị</span><span class="pill r">thay thế thuốc</span><span class="pill r">khỏi hẳn</span><span class="pill r">cam kết chữa</span></div>
+        <button class="btn btn-line sm" style="margin-top:8px" onclick="toast('➕ Thêm từ cấm')">➕ Thêm từ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD-ONS -->
+<div class="vw" id="v-addons"><div class="card"><h3>Chợ Add-ons <span><button class="btn btn-g sm">➕ Thêm</button></span></h3>
+<table class="t"><tr><th>Add-on</th><th>Nhà PT</th><th>Giá</th><th>Chia sẻ DT</th><th>Cài</th><th>TT</th></tr>
+<tr><td>🤖 Chat AI</td><td>FOHOWAY</td><td>99k/th</td><td>100/0</td><td>412</td><td><span class="pill g">Bán</span></td></tr>
+<tr><td>📱 Social Studio</td><td>FOHOWAY</td><td>49k/th</td><td>100/0</td><td>655</td><td><span class="pill g">Bán</span></td></tr>
+<tr><td>💬 Zalo Mini App</td><td>DevTeam Sabio</td><td>149k/th</td><td>70/30</td><td>188</td><td><span class="pill g">Bán</span></td></tr>
+<tr><td>🎯 Ads Optimizer</td><td>Cộng đồng</td><td>199k/th</td><td>70/30</td><td>—</td><td><span class="pill y">Chờ thẩm định</span></td></tr></table></div></div>
+
+<!-- MONEY -->
+<div class="vw" id="v-money"><div class="grid2">
+<div class="card"><h3>Cấu hình gói CTV</h3><div class="row2"><div class="field"><label>Gói Free — phí</label><input value="0₫"></div><div class="field"><label>Giới hạn SP</label><input value="20"></div><div class="field"><label>Gói PRO — phí</label><input value="199.000₫/tháng"></div><div class="field"><label>Phí giao dịch</label><input value="1,5%/đơn"></div></div>
+<table class="t" style="margin-top:8px"><tr><td>MoMo/ZaloPay cho gói Free</td><td style="text-align:right"><div class="tg" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Miễn phí PRO 3 tháng CTV mới</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr><tr><td>Khấu trừ thuế TNCN tự động</td><td style="text-align:right"><div class="tg on" onclick="this.classList.toggle('on')"></div></td></tr></table>
+<button class="btn btn-g sm" onclick="toast('💾 Áp dụng')">Áp dụng</button></div>
+<div class="card"><h3>Doanh thu NTT T7</h3><table class="t"><tr><td>Gói PRO (402 shop)</td><td style="text-align:right"><b>80 tr</b></td></tr><tr><td>Phí GD 1,5%</td><td style="text-align:right"><b>42,6 tr</b></td></tr><tr><td>Add-ons</td><td style="text-align:right"><b>51,4 tr</b></td></tr><tr><td>Quảng cáo</td><td style="text-align:right"><b>12 tr</b></td></tr><tr style="background:var(--gs)"><td><b>Tổng</b></td><td style="text-align:right"><b style="color:var(--seal)">186 tr</b></td></tr></table></div></div></div>
+
+<!-- DATABASE -->
+<div class="vw" id="v-db"><div class="card"><h3>Sơ đồ CSDL <span class="pill b">PostgreSQL + Redis + S3</span></h3>
+<div class="schema">
+<div class="ent"><h4>users</h4><ul><li><b>id</b> uuid PK</li><li>role: khách/CTV/spa/admin</li><li>phone, email, kyc_status</li><li>referrer_id FK</li></ul></div>
+<div class="ent"><h4>stores</h4><ul><li><b>id</b> PK · owner_id FK</li><li>slug, theme_json, plan</li><li>payment_methods[]</li><li>seo_json</li></ul></div>
+<div class="ent"><h4>products</h4><ul><li><b>id</b> PK · category_id</li><li>name, desc, ingredients</li><li>price_base, price_min/max</li><li>media[], seo_json</li></ul></div>
+<div class="ent"><h4>orders</h4><ul><li><b>id</b> PK · store_id FK</li><li>customer_id, items_json</li><li>payment, shipping, total</li></ul></div>
+<div class="ent"><h4 class="gold">landing_pages</h4><ul><li><b>id</b> PK · store_id, product_id</li><li>template, content_json</li><li>pixel_ids, moderation</li></ul></div>
+<div class="ent"><h4 class="gold">cms_blocks</h4><ul><li><b>id</b> PK · page, type</li><li>content_json, sort_order</li><li>is_visible, schedule</li></ul></div>
+<div class="ent"><h4 class="seal">ai_config</h4><ul><li><b>id</b> PK · model, api_key</li><li>system_prompt</li><li>knowledge_sources[]</li><li>banned_words[]</li></ul></div>
+<div class="ent"><h4 class="seal">ai_conversations</h4><ul><li><b>id</b> PK · user_id</li><li>messages_json</li><li>satisfaction_score</li><li>led_to_purchase</li></ul></div>
+</div>
+<div class="note">🏗 Stack: Next.js + NestJS + PostgreSQL + Redis + S3/CDN + AI API (Anthropic/OpenAI) + module kiểm duyệt nội dung.</div></div></div>
+
+<!-- ROLES -->
+<div class="vw" id="v-roles"><div class="grid2">
+<div class="card"><h3>Ma trận quyền</h3><table class="t"><tr><th>Quyền</th><th>SA</th><th>ĐH</th><th>BT</th><th>CS</th></tr>
+<tr><td>Cấu hình phí & AI</td><td>✅</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>CMS Frontend</td><td>✅</td><td>✅</td><td>✅</td><td>—</td></tr>
+<tr><td>Duyệt KYC/Landing</td><td>✅</td><td>✅</td><td>—</td><td>✅</td></tr>
+<tr><td>Dữ liệu tài chính</td><td>✅</td><td>✅</td><td>—</td><td>—</td></tr></table></div>
+<div class="card"><h3>Nhật ký</h3><table class="t"><tr><td>10:42 · <b>admin</b> duyệt LP minh-anh/dong-trung</td></tr><tr><td>10:31 · <b>AI</b> chặn "trị dứt điểm tiểu đường"</td></tr><tr><td>09:58 · <b>bich</b> cập nhật giá Gel Vàng</td></tr><tr><td>09:12 · <b>system</b> đối soát MoMo 214 GD ✓</td></tr></table></div></div></div>
+
+</main></div>
+<div class="toast" id="toast"></div>
+<script>
+const TI={dash:['Dashboard','Toàn cảnh nền tảng'],cms:['CMS Trang chủ','Bố cục · giao diện · chức năng Frontend'],products:['Sản phẩm','Kho SP gốc · khung giá CTV'],library:['Thư viện','Documents · Video · Audio · Podcast'],ctv:['CTV & Cửa hàng','KYC · cây giới thiệu · quản lý shop'],lp:['Mẫu Landing Pages','Tạo mẫu chuẩn · CTV xuất bản tức thì'],orders:['Đơn hàng','Toàn bộ GD · đối soát · khiếu nại'],ai:['FOHOWAY AI Chatbot','Cấu hình model · prompt · kiến thức · từ cấm'],addons:['Chợ Add-ons','Nội bộ & cộng đồng · 70/30'],money:['Gói phí & doanh thu','Free/PRO · phí GD · đối soát'],db:['Cơ sở dữ liệu','Schema + kiến trúc hệ thống'],roles:['Phân quyền & log','RBAC + audit log']};
+function av(v){document.querySelectorAll('.vw').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));document.getElementById('vt').textContent=TI[v][0];document.getElementById('vs').textContent=TI[v][1];window.scrollTo({top:0})}
+const vals=[42,48,45,58,61,55,67,72,70,81,86,94];
+document.getElementById('chart').innerHTML=vals.map((v,i)=>`<div class="bar" style="height:${v}%"><span>T${i+1}</span></div>`).join('');
+const SECS=[["🏔 Hero — Ấn triện","Khối mở đầu",1],["🧭 Ba học thuyết","3 thẻ triết lý",1],["📦 SP nổi bật","Top bán chạy",1],["🏪 CTA Đăng ký CTV","Chuyển đổi chính",1],["📰 Tin tức","4 bài mới nhất",0],["🤖 AI Chatbot","Floating bubble",1]];
+document.getElementById('cms-rows').innerHTML=SECS.map(s=>`<div class="sec-row" draggable="true"><span class="drag">⋮⋮</span><div><b>${s[0]}</b><small>${s[1]}</small></div><div class="sp"><button class="btn btn-line sm">✏</button><div class="tg ${s[2]?'on':''}" onclick="this.classList.toggle('on')"></div></div></div>`).join('');
+function showAddProduct(){document.getElementById('product-form').style.display='block';document.getElementById('product-form').scrollIntoView({behavior:'smooth'})}
+let TT;function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');clearTimeout(TT);TT=setTimeout(()=>e.classList.remove('on'),2600)}
+</script>
+</body></html>

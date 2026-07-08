@@ -1,0 +1,881 @@
+// ════════════════════════════════════════════════════════════════════
+// FOHOWAY Vietnam — Prisma Schema (Phase 1)
+// Mô hình: Quản lý ĐẠI LÝ kinh doanh (reseller), KHÔNG đa cấp.
+// - Đại lý = hộ kinh doanh độc lập: tự thu tiền, tự giữ kho, tự ship, tự khai thuế.
+// - Nền tảng = SaaS + kho catalog: thu phí đại lý qua gói cước + phí GD + add-ons.
+// - VI-only (Phase 1). Kênh Spa đối tác nằm trong scope.
+// ════════════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Neon: pooled (có -pooler) cho app serverless
+  directUrl = env("DIRECT_URL")   // Neon: direct cho prisma migrate/seed. Local = giống DATABASE_URL
+}
+
+// ─────────────────────────── ENUMS ───────────────────────────
+
+enum UserRole {
+  customer
+  agent // đại lý (CTV)
+  super_admin
+  admin
+  content_editor
+  finance
+  support
+}
+
+enum EkycStatus {
+  pending
+  verified
+  rejected
+}
+
+enum StoreTheme {
+  nordic
+  jade
+  nature
+}
+
+enum ProductStatus {
+  active
+  hidden
+  out_of_stock
+  discontinued
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  shipping
+  delivered
+  cancelled
+  returned
+}
+
+enum PaymentMethod {
+  cod
+  bank_transfer // VietQR
+  momo
+  zalopay
+  vnpay
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum ShippingCarrier {
+  ghn
+  ghtk
+  vpost
+  jt
+}
+
+enum ArticleType {
+  article
+  video
+  podcast
+}
+
+enum ContentSource {
+  fohoway
+  agent
+}
+
+enum DiscountType {
+  percent
+  fixed
+}
+
+enum SubscriptionStatus {
+  active
+  trialing
+  past_due
+  cancelled
+}
+
+enum InvoiceStatus {
+  draft
+  issued
+  paid
+  overdue
+  void
+}
+
+enum SpaStatus {
+  pending
+  active
+  suspended
+}
+
+// ─────────────────────────── USERS & AUTH ───────────────────────────
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  email         String   @unique
+  phone         String?  @unique
+  passwordHash  String
+  fullName      String
+  role          UserRole @default(customer)
+  avatarUrl     String?
+  isActive      Boolean  @default(true)
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  agentProfile   AgentProfile?
+  approvedAgents AgentProfile[] @relation("ApprovedBy")
+  articles       ContentArticle[]
+  auditLogs      AuditLog[]
+  uploads        MediaAsset[]
+
+  @@map("users")
+}
+
+// OTP đăng nhập/xác minh qua Zalo/SMS (bổ sung — tài liệu gốc thiếu)
+model OtpCode {
+  id        String   @id @default(uuid()) @db.Uuid
+  phone     String
+  codeHash  String
+  purpose   String // login, register, reset
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("otp_codes")
+}
+
+// ─────────────────────────── AGENT (ĐẠI LÝ) ───────────────────────────
+
+model AgentProfile {
+  id             String     @id @default(uuid()) @db.Uuid
+  userId         String     @unique @db.Uuid
+  agentCode      String     @unique // VD: DL-0042
+  tier           String     @default("standard") // standard, silver, gold, diamond
+  // eKYC — PII nhạy cảm: mã hóa at-rest ở app layer, ảnh dùng signed URL
+  cccdNumber     String?
+  cccdFrontUrl   String?
+  cccdBackUrl    String?
+  selfieUrl      String?
+  ekycStatus     EkycStatus @default(pending)
+  ekycVerifiedAt DateTime?
+  // Hộ kinh doanh — đại lý tự khai/nộp thuế
+  businessName   String? // tên hộ kinh doanh
+  taxId          String? // MST
+  // referrer: CHỈ để tracking người giới thiệu, KHÔNG phải cây chi trả
+  referrerId     String?    @db.Uuid
+  approvedById   String?    @db.Uuid
+  approvedAt     DateTime?
+  createdAt      DateTime   @default(now())
+
+  user       User          @relation(fields: [userId], references: [id])
+  referrer   AgentProfile? @relation("Referral", fields: [referrerId], references: [id])
+  referrals  AgentProfile[] @relation("Referral")
+  approvedBy User?         @relation("ApprovedBy", fields: [approvedById], references: [id])
+  store      Store?
+
+  @@index([referrerId])
+  @@map("agent_profiles")
+}
+
+// ─────────────────────────── STORE (CỬA HÀNG ĐẠI LÝ) ───────────────────────────
+
+model Store {
+  id          String     @id @default(uuid()) @db.Uuid
+  agentId     String     @unique @db.Uuid
+  storeName   String
+  slug        String     @unique // /s/{slug}
+  slogan      String?
+  description String?
+  phone       String?
+  email       String?
+  address     String?
+  logoUrl     String?
+  coverUrl    String?
+  faviconUrl  String?
+  theme       StoreTheme @default(nordic)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  agent           AgentProfile           @relation(fields: [agentId], references: [id])
+  customization   StoreCustomization?
+  storeProducts   StoreProduct[]
+  variantStocks   StoreVariantStock[]
+  orders          Order[]
+  customers       Customer[]
+  carts           Cart[]
+  landingPages    LandingPage[]
+  promoCodes      PromoCode[]
+  reviews         Review[]
+  articles        ContentArticle[]
+  contentPicks    StoreContentSelection[]
+  paymentAccounts AgentPaymentAccount[]
+  subscription    Subscription?
+  addonSubs       StoreAddonSubscription[]
+  invoices        PlatformInvoice[]
+  leads           Lead[]
+  chatSessions    AiChatSession[]
+
+  @@map("stores")
+}
+
+model StoreCustomization {
+  id             String   @id @default(uuid()) @db.Uuid
+  storeId        String   @unique @db.Uuid
+  fontBody       String   @default("Be Vietnam Pro")
+  fontHeading    String   @default("Cormorant Garamond")
+  colorScheme    String   @default("jade_gold") // jade_gold, ocean, nature
+  colorPrimary   String?
+  homepageBlocks Json     @default("[]") // [{type, order, enabled, config}]
+  displayOptions Json     @default("{}") // {show_sold, show_stars, show_badge, chat_ai, popup_lead}
+  customCss      String?
+  updatedAt      DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@map("store_customizations")
+}
+
+// ─────────────────────────── PRODUCTS (CATALOG — ADMIN) ───────────────────────────
+
+model ProductCategory {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String // TPCN, Thiết bị, Mỹ phẩm
+  slug      String    @unique
+  icon      String? // emoji
+  sortOrder Int       @default(0)
+  products  Product[]
+
+  @@map("product_categories")
+}
+
+model Product {
+  id             String        @id @default(uuid()) @db.Uuid
+  sku            String        @unique
+  barcode        String?
+  name           String
+  subtitle       String?
+  categoryId     String?       @db.Uuid
+  brand          String        @default("FOHOWAY")
+  origin         String?
+  packaging      String?
+  weightGrams    Int?
+  dimensions     String?
+  // Pricing — khung giá đại lý (base là giá tham chiếu catalog)
+  basePrice      Decimal       @db.Decimal(15, 2)
+  msrpPrice      Decimal?      @db.Decimal(15, 2)
+  agentMinPrice  Decimal       @db.Decimal(15, 2) // giá sàn đại lý
+  agentMaxPrice  Decimal       @db.Decimal(15, 2) // giá trần đại lý
+  vatRate        Decimal       @default(8.00) @db.Decimal(5, 2)
+  // Content
+  description    String?
+  ingredients    String?
+  benefits       String? // qua kiểm duyệt AI (từ cấm TPCN) trước khi publish
+  usageGuide     String?
+  targetAudience String?
+  warnings       String?
+  registrationNo String? // Số ĐKSP
+  // SEO
+  seoTitle       String?
+  seoDescription String?
+  urlSlug        String?       @unique
+  tags           String[]
+  status         ProductStatus @default(active)
+  sortOrder      Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  category      ProductCategory? @relation(fields: [categoryId], references: [id])
+  images        ProductImage[]
+  variants      ProductVariant[]
+  storeProducts StoreProduct[]
+  orderItems    OrderItem[]
+  landingPages  LandingPage[]
+  reviews       Review[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @db.Uuid
+  imageUrl  String
+  altText   String?
+  sortOrder Int     @default(0) // ảnh đầu = đại diện
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+// Biến thể (bổ sung — "Bộ đầy đủ", Gel Vàng/Đỏ, dung tích...)
+model ProductVariant {
+  id           String   @id @default(uuid()) @db.Uuid
+  productId    String   @db.Uuid
+  name         String // VD: "Hộp 60 viên", "Bộ đầy đủ"
+  skuSuffix    String?
+  priceDelta   Decimal  @default(0) @db.Decimal(15, 2) // chênh so với base
+  sortOrder    Int      @default(0)
+
+  product     Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  storeStocks StoreVariantStock[]
+
+  @@map("product_variants")
+}
+
+// ─────────────────────────── STORE PRODUCTS (giá + TỒN RIÊNG của đại lý) ───────────────────────────
+
+model StoreProduct {
+  id                String   @id @default(uuid()) @db.Uuid
+  storeId           String   @db.Uuid
+  productId         String   @db.Uuid
+  sellingPrice      Decimal  @db.Decimal(15, 2) // trong khung agentMin..agentMax — enforce bằng TRIGGER (xem migration)
+  // Đại lý tự giữ tồn riêng (không dùng kho tổng)
+  stockQuantity     Int      @default(0)
+  lowStockThreshold Int      @default(20)
+  isActive          Boolean  @default(true)
+  sortOrder         Int      @default(0)
+  createdAt         DateTime @default(now())
+
+  store   Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([storeId, productId])
+  @@index([storeId])
+  @@map("store_products")
+}
+
+// Tồn theo BIẾN THỂ — mỗi đại lý tự giữ & theo dõi (VD Gel Vàng vs Đỏ khác tồn)
+model StoreVariantStock {
+  id                String   @id @default(uuid()) @db.Uuid
+  storeId           String   @db.Uuid
+  variantId         String   @db.Uuid
+  stockQuantity     Int      @default(0)
+  lowStockThreshold Int      @default(20)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+
+  store   Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, variantId])
+  @@index([storeId])
+  @@map("store_variant_stocks")
+}
+
+// ─────────────────────────── CUSTOMERS (CRM — scope theo store) ───────────────────────────
+
+model Customer {
+  id            String   @id @default(uuid()) @db.Uuid
+  storeId       String   @db.Uuid
+  fullName      String
+  phone         String
+  email         String?
+  address       String?
+  totalSpent    Decimal  @default(0) @db.Decimal(15, 2)
+  orderCount    Int      @default(0)
+  lastOrderAt   DateTime?
+  nextReminder  DateTime? // nhắc mua lại
+  createdAt     DateTime @default(now())
+
+  store  Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@unique([storeId, phone]) // 1 khách/1 SĐT trong 1 store
+  @@index([storeId])
+  @@map("customers")
+}
+
+// ─────────────────────────── CART (guest cart, bổ sung) ───────────────────────────
+
+model Cart {
+  id        String     @id @default(uuid()) @db.Uuid
+  storeId   String     @db.Uuid
+  sessionId String // guest session token
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  store Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@unique([storeId, sessionId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(uuid()) @db.Uuid
+  cartId    String  @db.Uuid
+  productId String  @db.Uuid
+  variantId String? @db.Uuid
+  quantity  Int     @default(1)
+
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  @@map("cart_items")
+}
+
+// ─────────────────────────── ORDERS ───────────────────────────
+// Đại lý tự thu tiền vào tài khoản riêng. Nền tảng KHÔNG giữ tiền khách.
+
+model Order {
+  id              String          @id @default(uuid()) @db.Uuid
+  orderCode       String          @unique // #DL-1042
+  storeId         String          @db.Uuid
+  customerId      String?         @db.Uuid
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  customerAddress String
+  subtotal        Decimal         @db.Decimal(15, 2)
+  discountAmount  Decimal         @default(0) @db.Decimal(15, 2)
+  shippingFee     Decimal         @default(0) @db.Decimal(15, 2)
+  totalAmount     Decimal         @db.Decimal(15, 2)
+  // phí nền tảng ghi nhận trên đơn để cuối kỳ gộp vào hóa đơn thu đại lý.
+  // SNAPSHOT tại thời điểm đặt đơn — Admin đổi phí sau KHÔNG làm sai đơn cũ.
+  appliedTxnFeePercent Decimal    @default(0) @db.Decimal(5, 2)
+  platformFee     Decimal         @default(0) @db.Decimal(15, 2)
+  promoCodeId     String?         @db.Uuid
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus   @default(pending)
+  orderStatus     OrderStatus     @default(pending)
+  shippingCarrier ShippingCarrier?
+  trackingNumber  String?
+  notes           String?
+  cancelledReason String?
+  invoiceId       String?         @db.Uuid // gộp vào PlatformInvoice kỳ nào
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  store     Store           @relation(fields: [storeId], references: [id])
+  customer  Customer?       @relation(fields: [customerId], references: [id])
+  promoCode PromoCode?      @relation(fields: [promoCodeId], references: [id])
+  invoice   PlatformInvoice? @relation(fields: [invoiceId], references: [id])
+  items     OrderItem[]
+  timeline  OrderTimeline[]
+  payment   Payment?
+  reviews   Review[]
+
+  @@index([storeId])
+  @@index([orderStatus])
+  @@index([createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(uuid()) @db.Uuid
+  orderId     String  @db.Uuid
+  productId   String? @db.Uuid
+  variantId   String? @db.Uuid // ref biến thể (analytics); tên đã snapshot bên dưới
+  productName String // snapshot
+  variantName String?
+  quantity    Int
+  unitPrice   Decimal @db.Decimal(15, 2)
+  totalPrice  Decimal @db.Decimal(15, 2)
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}
+
+model OrderTimeline {
+  id        String      @id @default(uuid()) @db.Uuid
+  orderId   String      @db.Uuid
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_timeline")
+}
+
+// Ghi nhận thanh toán vào TÀI KHOẢN CỦA ĐẠI LÝ (không phải ví nền tảng)
+model Payment {
+  id            String        @id @default(uuid()) @db.Uuid
+  orderId       String        @unique @db.Uuid
+  method        PaymentMethod
+  amount        Decimal       @db.Decimal(15, 2)
+  transactionId String? // mã GD từ cổng của đại lý
+  status        PaymentStatus @default(pending)
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// Cổng thanh toán riêng của từng đại lý (tiền khách chảy vào đây)
+model AgentPaymentAccount {
+  id        String        @id @default(uuid()) @db.Uuid
+  storeId   String        @db.Uuid
+  method    PaymentMethod
+  // cấu hình theo method: số TK/tên NH, số MoMo, merchant id cổng...
+  config    Json          @default("{}")
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, method])
+  @@map("agent_payment_accounts")
+}
+
+// ─────────────────────────── DOANH THU NỀN TẢNG: PLANS + SUBSCRIPTIONS + ADD-ONS ───────────────────────────
+
+model Plan {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String // Free, PRO
+  monthlyPrice    Decimal  @default(0) @db.Decimal(15, 2) // VD PRO 199.000
+  txnFeePercent   Decimal  @default(0) @db.Decimal(5, 2) // phí GD theo gói, VD 1.5
+  productLimit    Int? // Free giới hạn SP; null = không giới hạn
+  features        Json     @default("[]")
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                 String             @id @default(uuid()) @db.Uuid
+  storeId            String             @unique @db.Uuid
+  planId             String             @db.Uuid
+  status             SubscriptionStatus @default(active)
+  currentPeriodStart DateTime           @default(now())
+  currentPeriodEnd   DateTime?
+  trialEndsAt        DateTime?
+  createdAt          DateTime           @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  plan  Plan  @relation(fields: [planId], references: [id])
+
+  @@map("subscriptions")
+}
+
+model Addon {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  slug         String   @unique
+  description  String?
+  monthlyPrice Decimal  @default(0) @db.Decimal(15, 2)
+  developer    String   @default("FOHOWAY")
+  revShareNote String? // VD "70/30" cho add-on cộng đồng
+  isActive     Boolean  @default(true)
+
+  subscriptions StoreAddonSubscription[]
+
+  @@map("addons")
+}
+
+model StoreAddonSubscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  storeId   String   @db.Uuid
+  addonId   String   @db.Uuid
+  isActive  Boolean  @default(true)
+  startedAt DateTime @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  addon Addon @relation(fields: [addonId], references: [id])
+
+  @@unique([storeId, addonId])
+  @@map("store_addon_subscriptions")
+}
+
+// Nền tảng XUẤT HÓA ĐƠN THU ĐẠI LÝ mỗi kỳ (gói + phí GD gộp từ đơn + add-ons)
+// (thay cho settlements/escrow của tài liệu gốc — nền tảng không giữ tiền khách)
+model PlatformInvoice {
+  id                 String        @id @default(uuid()) @db.Uuid
+  storeId            String        @db.Uuid
+  periodStart        DateTime      @db.Date
+  periodEnd          DateTime      @db.Date
+  subscriptionFee    Decimal       @default(0) @db.Decimal(15, 2)
+  transactionFeeTotal Decimal      @default(0) @db.Decimal(15, 2) // gộp platformFee các đơn trong kỳ
+  addonFeeTotal      Decimal       @default(0) @db.Decimal(15, 2)
+  totalDue           Decimal       @db.Decimal(15, 2)
+  status             InvoiceStatus @default(draft)
+  dueDate            DateTime?     @db.Date
+  paidAt             DateTime?
+  createdAt          DateTime      @default(now())
+
+  store  Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([storeId])
+  @@map("platform_invoices")
+}
+
+// ─────────────────────────── LANDING PAGES ───────────────────────────
+
+model LpTemplate {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String // Thảo Mộc, Flash Sale, Chuyên gia, Câu chuyện
+  slug         String        @unique
+  icon         String?
+  htmlTemplate String?
+  isActive     Boolean       @default(true)
+  landingPages LandingPage[]
+
+  @@map("lp_templates")
+}
+
+model LandingPage {
+  id          String   @id @default(uuid()) @db.Uuid
+  storeId     String   @db.Uuid
+  templateId  String   @db.Uuid
+  productId   String   @db.Uuid
+  slug        String // /lp/{store}/{slug}
+  title       String?
+  offerText   String?
+  ctaText     String?
+  description String?
+  fbPixel     String?
+  tiktokPixel String?
+  views       Int      @default(0)
+  conversions Int      @default(0)
+  status      String   @default("active") // active, paused, archived
+  createdAt   DateTime @default(now())
+
+  store    Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  template LpTemplate @relation(fields: [templateId], references: [id])
+  product  Product    @relation(fields: [productId], references: [id])
+
+  @@unique([storeId, slug]) // fix: tài liệu gốc slug không unique
+  @@index([storeId])
+  @@map("landing_pages")
+}
+
+// ─────────────────────────── CONTENT ───────────────────────────
+
+model ContentArticle {
+  id           String        @id @default(uuid()) @db.Uuid
+  title        String
+  body         String?
+  type         ArticleType   @default(article)
+  source       ContentSource @default(fohoway)
+  authorId     String?       @db.Uuid
+  storeId      String?       @db.Uuid // null = FOHOWAY global
+  thumbnailUrl String?
+  videoUrl     String?
+  viewCount    Int           @default(0)
+  // UGC của đại lý cũng cần cờ kiểm duyệt (bổ sung)
+  isModerated  Boolean       @default(false)
+  isPublished  Boolean       @default(true)
+  publishedAt  DateTime?
+  createdAt    DateTime      @default(now())
+
+  author User?  @relation(fields: [authorId], references: [id])
+  store  Store? @relation(fields: [storeId], references: [id])
+  picks  StoreContentSelection[]
+
+  @@index([source])
+  @@map("content_articles")
+}
+
+// Đại lý tick chọn bài FOHOWAY để hiện trên store
+model StoreContentSelection {
+  storeId   String  @db.Uuid
+  articleId String  @db.Uuid
+  isVisible Boolean @default(true)
+
+  store   Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  article ContentArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@id([storeId, articleId])
+  @@map("store_content_selections")
+}
+
+// ─────────────────────────── PROMO / REVIEW / LEAD ───────────────────────────
+
+model PromoCode {
+  id            String       @id @default(uuid()) @db.Uuid
+  storeId       String       @db.Uuid
+  code          String
+  discountType  DiscountType @default(percent)
+  discountValue Decimal      @db.Decimal(10, 2)
+  minOrder      Decimal      @default(0) @db.Decimal(15, 2)
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  expiresAt     DateTime?
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+
+  store  Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@unique([storeId, code]) // fix: tránh trùng mã trong 1 store
+  @@map("promo_codes")
+}
+
+model Review {
+  id           String   @id @default(uuid()) @db.Uuid
+  storeId      String   @db.Uuid
+  productId    String?  @db.Uuid
+  orderId      String?  @db.Uuid
+  customerName String?
+  rating       Int // 1..5 (CHECK trong migration)
+  content      String?
+  isApproved   Boolean  @default(false) // mặc định chờ duyệt (khớp module quản lý đánh giá)
+  createdAt    DateTime @default(now())
+
+  store   Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+  order   Order?   @relation(fields: [orderId], references: [id])
+
+  @@index([storeId])
+  @@index([productId])
+  @@map("reviews")
+}
+
+// Thu lead từ popup / block thu email (bổ sung)
+model Lead {
+  id        String   @id @default(uuid()) @db.Uuid
+  storeId   String   @db.Uuid
+  name      String?
+  phone     String?
+  email     String?
+  source    String? // popup, email_block, landing
+  createdAt DateTime @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@map("leads")
+}
+
+// ─────────────────────────── SPA PARTNERS (Kênh 1) ───────────────────────────
+
+model SpaPartner {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  ownerName   String?
+  phone       String?
+  email       String?
+  address     String?
+  lat         Decimal?  @db.Decimal(10, 7)
+  lng         Decimal?  @db.Decimal(10, 7)
+  description String?
+  status      SpaStatus @default(pending)
+  approvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([status])
+  @@map("spa_partners")
+}
+
+// ─────────────────────────── AI CHATBOT ───────────────────────────
+
+model AiChatbotConfig {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @default("FOHOWAY Assistant")
+  model           String   @default("claude-sonnet-5") // sửa: ID model hợp lệ
+  systemPrompt    String?
+  temperature     Decimal  @default(0.4) @db.Decimal(3, 2)
+  maxTokens       Int      @default(1024)
+  knowledgeDocs   Json     @default("[]")
+  bannedWords     String[] @default([]) // kiểm duyệt TPCN cấu hình được
+  deployMainSite  Boolean  @default(true)
+  deployCtvStores Boolean  @default(true)
+  isActive        Boolean  @default(true)
+  updatedAt       DateTime @updatedAt
+
+  sessions AiChatSession[]
+
+  @@map("ai_chatbot_configs")
+}
+
+model AiChatSession {
+  id               String   @id @default(uuid()) @db.Uuid
+  configId         String   @db.Uuid
+  storeId          String?  @db.Uuid // null = main site
+  visitorId        String?
+  messages         Json     @default("[]")
+  // analytics giữ lại từ prototype admin
+  satisfactionScore Int?
+  ledToPurchase    Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  config AiChatbotConfig @relation(fields: [configId], references: [id])
+  store  Store?          @relation(fields: [storeId], references: [id])
+
+  @@index([storeId])
+  @@map("ai_chat_sessions")
+}
+
+// ─────────────────────────── MEDIA + AUDIT + NOTIFICATION ───────────────────────────
+
+model MediaAsset {
+  id         String   @id @default(uuid()) @db.Uuid
+  filename   String?
+  url        String
+  fileType   String // image, video, document, audio
+  fileSize   Int?
+  uploadedBy String?  @db.Uuid
+  folder     String   @default("general")
+  createdAt  DateTime @default(now())
+
+  uploader User? @relation(fields: [uploadedBy], references: [id])
+
+  @@map("media_library")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @db.Uuid
+  action     String // product.create, order.update, agent.approve
+  entityType String?
+  entityId   String?  @db.Uuid
+  details    Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+// Tham số cấu hình toàn nền tảng — Admin sửa được (phí mặc định, ngưỡng freeship...)
+// Mọi loại phí đổi được; thay đổi ghi vào AuditLog. Phí đã áp vào đơn/hóa đơn là snapshot.
+model PlatformSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique // vd: default_txn_fee_percent, freeship_threshold, pro_monthly_price
+  value     String
+  valueType String   @default("string") // string, number, boolean, json
+  label     String?
+  updatedBy String?  @db.Uuid
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
+// Thông báo push/email (bổ sung — module SEO & Thông báo + Phase 4)
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  storeId   String?  @db.Uuid
+  audience  String // customer, agent, admin
+  channel   String // push, email, sms
+  title     String
+  body      String?
+  data      Json?
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([storeId])
+  @@map("notifications")
+}
